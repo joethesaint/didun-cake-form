@@ -15,6 +15,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -23,6 +24,7 @@ body {
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.4;
 }
 
 .paper-container {
@@ -37,6 +39,8 @@ body {
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+  /* Safari Stability */
+  flex-shrink: 0;
 }
 
 /* Responsive Grid Utilities */
@@ -67,9 +71,10 @@ body {
 @media (max-width: 768px) {
   .paper-container {
     padding: 20px 15px;
-    width: 100vw;
+    width: 100%;
     margin: 0;
     box-shadow: none;
+    border-radius: 0;
   }
 
   .responsive-grid-3, 
@@ -90,10 +95,12 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+    width: 100%;
   }
 
   .field-line {
     width: 100% !important;
+    font-size: 16px !important; /* Prevents iOS auto-zoom on focus */
   }
 
   .section-box {
@@ -107,6 +114,7 @@ body {
     right: 0;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     padding: 12px 15px;
     box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
     display: flex;
@@ -120,13 +128,6 @@ body {
   .no-print button {
     width: 100%;
     max-width: 300px;
-  }
-}
-
-@media (max-width: 1080px) {
-  .paper-container {
-    padding: 2.5vw 4vw;
-    font-size: clamp(12px, 1.5vw, 14px);
   }
 }
 
@@ -161,27 +162,15 @@ body {
     background-color: white !important;
     overflow: hidden !important;
     
-    /* Slightly more aggressive scale for guaranteed single-page fit */
+    -webkit-transform: scale(0.74) !important;
     transform: scale(0.74) !important; 
+    -webkit-transform-origin: top left !important;
     transform-origin: top left !important;
     border: none !important;
     page-break-after: avoid !important;
     page-break-before: avoid !important;
     break-inside: avoid !important;
   }
-
-  .no-print {
-    display: none !important;
-  }
-
-  .field-group {
-    margin-bottom: 15px !important; /* Reduced from 20px */
-  }
-
-  .header-title {
-    margin-bottom: 30px !important; /* Reduced from 40px */
-  }
-}
 
   .no-print {
     display: none !important;
@@ -254,6 +243,10 @@ body {
   outline: none;
   font-family: inherit;
   font-size: 14px;
+  background-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
 }
 
 .field-group {
@@ -262,6 +255,10 @@ body {
   gap: 8px;
   margin-bottom: 15px;
   font-size: 14px;
+}
+
+.field-group span {
+  flex-shrink: 0;
 }
 
 /* Boxed sections */
@@ -300,6 +297,8 @@ body {
   height: 18px;
   border: 1px solid #000;
   position: relative;
+  flex-shrink: 0;
+  background-color: #fff;
 }
 
 .custom-checkbox input:checked+.checkmark::after {
