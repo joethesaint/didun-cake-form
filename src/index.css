@@ -132,9 +132,12 @@ body {
 
 .sub-header {
   font-weight: 700;
-  margin: 10px 0;
-  font-size: 14px;
+  margin: 15px 0 10px 0;
+  font-size: 15px;
   text-align: center;
+  font-family: var(--font-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .note-list {
