@@ -27,15 +27,26 @@ body {
 
 .paper-container {
   background-color: var(--bg-color);
-  width: 210mm;
-  max-width: 100%;
-  min-height: 297mm;
-  margin: 2rem auto;
-  padding: 40px 50px;
+  width: 1080px;
+  height: 1350px;
+  max-width: 95vw;
+  max-height: none;
+  margin: 20px auto;
+  padding: 35px 50px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 1100px) {
+  .paper-container {
+    width: 90vw;
+    height: 112.5vw;
+    /* Maintain 4:5 */
+    padding: 25px 35px;
+  }
 }
 
 @media print {
@@ -46,24 +57,25 @@ body {
   .paper-container {
     margin: 0;
     box-shadow: none;
-    width: 100%;
-    padding: 0;
+    width: 1080px;
+    height: 1350px;
+    padding: 35px 50px;
   }
 }
 
 .logo-script {
   font-family: var(--font-script);
-  font-size: 84px;
+  font-size: 72px;
   text-align: center;
-  margin-bottom: -15px;
+  margin-bottom: -10px;
 }
 
 .header-title {
   font-family: var(--font-serif);
-  font-size: 32px;
+  font-size: 28px;
   text-align: center;
   letter-spacing: 0.15em;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .field-line {
@@ -146,7 +158,8 @@ body {
 
 .footer-handle {
   text-align: center;
-  margin-top: 50px;
+  margin-top: auto;
+  padding-top: 20px;
   font-size: 14px;
   color: #555;
   font-weight: 500;

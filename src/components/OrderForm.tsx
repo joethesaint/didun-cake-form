@@ -42,7 +42,7 @@ const OrderForm: React.FC = () => {
             <div className="header-title">CAKE ORDER FORM</div>
 
             {/* Header Fields */}
-            <div style={{ display: 'flex', gap: '25px', alignItems: 'center', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '25px', alignItems: 'center', marginBottom: '15px' }}>
                 <span style={{ fontSize: '15px' }}>First time order:</span>
                 <label className="custom-checkbox">
                     <input type="checkbox" checked={formData.isFirstTime === true} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
@@ -61,7 +61,7 @@ const OrderForm: React.FC = () => {
                 <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '15px', marginBottom: '15px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '15px', marginBottom: '12px' }}>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Delivery Date:</span>
                     <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.deliveryDate} onChange={e => setFormData(p => ({ ...p, deliveryDate: e.target.value }))} />
@@ -76,7 +76,7 @@ const OrderForm: React.FC = () => {
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', marginBottom: '15px', fontSize: '15px' }}>
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', marginBottom: '12px', fontSize: '15px' }}>
                 <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Tiers requested:</span>
                     <input className="field-line" style={{ width: '80px' }} value={formData.tiers} onChange={e => setFormData(p => ({ ...p, tiers: e.target.value }))} />
@@ -94,7 +94,7 @@ const OrderForm: React.FC = () => {
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', marginBottom: '30px', fontSize: '15px' }}>
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-end', marginBottom: '20px', fontSize: '15px' }}>
                 <span>Delivery needed?</span>
                 <label className="custom-checkbox" style={{ marginBottom: 0 }}>
                     <input type="checkbox" checked={formData.deliveryNeeded === true} onChange={() => setFormData(p => ({ ...p, deliveryNeeded: p.deliveryNeeded === true ? null : true }))} />
@@ -175,7 +175,7 @@ const OrderForm: React.FC = () => {
             </div>
 
             {/* Bottom Grid Section */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px', marginBottom: '15px' }}>
                 <div className="section-box">
                     <div className="section-title">Size</div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px' }}>
@@ -209,8 +209,8 @@ const OrderForm: React.FC = () => {
                 <span>Special Instructions :</span>
                 <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.specialInstructions} onChange={e => setFormData(p => ({ ...p, specialInstructions: e.target.value }))} />
             </div>
-            <div className="field-line" style={{ height: '30px', marginBottom: '10px' }}></div>
-            <div className="field-line" style={{ height: '30px', marginBottom: '40px' }}></div>
+            <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
+            <div className="field-line" style={{ height: '25px', marginBottom: '25px' }}></div>
 
             {/* Footer Branding */}
             <div style={{ marginTop: 'auto', borderTop: '2px solid #000', paddingTop: '15px', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
