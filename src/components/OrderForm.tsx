@@ -62,77 +62,79 @@ const OrderForm: React.FC = () => {
             <div className="header-title">CAKE ORDER FORM</div>
 
             {/* Header Fields */}
-            <div style={{ display: 'flex !important', gap: '25px !important', alignItems: 'center !important', marginBottom: '15px !important' }}>
+            <div className="flex-responsive" style={{ gap: '25px', alignItems: 'center', marginBottom: '15px' }}>
                 <span style={{ fontSize: '15px' }}>First time order:</span>
-                <label className="custom-checkbox">
-                    <input type="checkbox" aria-label="First time order: Yes" checked={formData.isFirstTime === true} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
-                    <div className="checkmark"></div>
-                    <span>Yes</span>
-                </label>
-                <label className="custom-checkbox">
-                    <input type="checkbox" aria-label="First time order: No" checked={formData.isFirstTime === false} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === false ? null : false }))} />
-                    <div className="checkmark"></div>
-                    <span>No</span>
-                </label>
+                <div className="checkbox-group">
+                    <label className="custom-checkbox" style={{ marginBottom: 0 }}>
+                        <input type="checkbox" aria-label="First time order: Yes" checked={formData.isFirstTime === true} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
+                        <div className="checkmark"></div>
+                        <span>Yes</span>
+                    </label>
+                    <label className="custom-checkbox" style={{ marginBottom: 0 }}>
+                        <input type="checkbox" aria-label="First time order: No" checked={formData.isFirstTime === false} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === false ? null : false }))} />
+                        <div className="checkmark"></div>
+                        <span>No</span>
+                    </label>
+                </div>
             </div>
 
             <div className="field-group">
                 <span>Name :</span>
-                <input className="field-line" style={{ flex: '1 !important', minWidth: '0 !important' }} aria-label="Customer Name" value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} />
+                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Customer Name" value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} />
             </div>
 
-            <div className="responsive-grid-3" style={{ marginBottom: '12px !important' }}>
+            <div className="responsive-grid-3" style={{ marginBottom: '12px' }}>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Delivery Date:</span>
-                    <input type="date" className="field-line" style={{ flex: '1 !important', minWidth: '0 !important' }} aria-label="Delivery Date" value={formData.deliveryDate} onChange={e => setFormData(p => ({ ...p, deliveryDate: e.target.value }))} />
+                    <input type="date" className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Delivery Date" value={formData.deliveryDate} onChange={e => setFormData(p => ({ ...p, deliveryDate: e.target.value }))} />
                 </div>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Phone #:</span>
-                    <input className="field-line" style={{ flex: '1 !important', minWidth: '0 !important' }} aria-label="Phone Number" value={formData.phone} onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Phone Number" value={formData.phone} onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))} />
                 </div>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Occasion:</span>
-                    <input className="field-line" style={{ flex: '1 !important', minWidth: '0 !important' }} aria-label="Occasion" value={formData.occasion} onChange={e => setFormData(p => ({ ...p, occasion: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Occasion" value={formData.occasion} onChange={e => setFormData(p => ({ ...p, occasion: e.target.value }))} />
                 </div>
             </div>
 
-            <div className="flex-responsive" style={{ alignItems: 'flex-end !important', marginBottom: '12px !important', fontSize: '15px !important' }}>
-                <div className="field-group" style={{ marginBottom: '0 !important' }}>
+            <div className="flex-responsive" style={{ alignItems: 'flex-end', marginBottom: '12px', fontSize: '15px' }}>
+                <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Tiers requested:</span>
-                    <input className="field-line" style={{ width: '80px !important' }} aria-label="Tiers requested" value={formData.tiers} onChange={e => setFormData(p => ({ ...p, tiers: e.target.value }))} />
+                    <input className="field-line" style={{ width: '80px' }} aria-label="Tiers requested" value={formData.tiers} onChange={e => setFormData(p => ({ ...p, tiers: e.target.value }))} />
                 </div>
-                <div style={{ display: 'flex !important', gap: '15px !important', flexWrap: 'wrap !important' }}>
+                <div className="checkbox-group">
                     {['Round', 'Square', 'Heart', 'Sheet'].map(s => (
-                        <label key={s} className="custom-checkbox" style={{ marginBottom: '0 !important' }}>
+                        <label key={s} className="custom-checkbox" style={{ marginBottom: 0 }}>
                             <input type="checkbox" aria-label={`Shape: ${s}`} checked={formData.shape === s} onChange={() => setFormData(p => ({ ...p, shape: p.shape === s ? '' : s }))} />
                             <div className="checkmark"></div>
                             <span>{s}</span>
                         </label>
                     ))}
                 </div>
-                <div className="field-group" style={{ marginBottom: '0 !important' }}>
+                <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Custom:</span>
-                    <input className="field-line" style={{ width: '100px !important' }} aria-label="Custom shape" value={formData.shapeCustom} onChange={e => setFormData(p => ({ ...p, shapeCustom: e.target.value }))} />
+                    <input className="field-line" style={{ width: '100px' }} aria-label="Custom shape" value={formData.shapeCustom} onChange={e => setFormData(p => ({ ...p, shapeCustom: e.target.value }))} />
                 </div>
             </div>
 
-            <div className="flex-responsive" style={{ alignItems: 'flex-end !important', marginBottom: '20px !important', fontSize: '15px !important' }}>
-                <div style={{ display: 'flex !important', gap: '20px !important', alignItems: 'center !important' }}>
+            <div className="flex-responsive" style={{ alignItems: 'flex-end', marginBottom: '20px', fontSize: '15px' }}>
+                <div className="checkbox-group" style={{ alignItems: 'center' }}>
                     <span>Delivery needed?</span>
-                    <label className="custom-checkbox" style={{ marginBottom: '0 !important' }}>
+                    <label className="custom-checkbox" style={{ marginBottom: 0 }}>
                         <input type="checkbox" aria-label="Delivery needed: Yes" checked={formData.deliveryNeeded === true} onChange={() => setFormData(p => ({ ...p, deliveryNeeded: p.deliveryNeeded === true ? null : true }))} />
                         <div className="checkmark"></div>
                         <span>Yes</span>
                     </label>
-                    <label className="custom-checkbox" style={{ marginBottom: '0 !important' }}>
+                    <label className="custom-checkbox" style={{ marginBottom: 0 }}>
                         <input type="checkbox" aria-label="Delivery needed: No" checked={formData.deliveryNeeded === false} onChange={() => setFormData(p => ({ ...p, deliveryNeeded: p.deliveryNeeded === false ? null : false }))} />
                         <div className="checkmark"></div>
                         <span>No</span>
                     </label>
                 </div>
-                <div className="field-group" style={{ marginBottom: '0 !important', flex: '1 !important', minWidth: '200px !important' }}>
+                <div className="field-group" style={{ marginBottom: 0, flex: 1, minWidth: '200px' }}>
                     <span style={{ whiteSpace: 'nowrap' }}>If yes, address:</span>
-                    <input className="field-line" style={{ flex: '1 !important', minWidth: '0 !important' }} aria-label="Delivery Address" value={formData.address} onChange={e => setFormData(p => ({ ...p, address: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Delivery Address" value={formData.address} onChange={e => setFormData(p => ({ ...p, address: e.target.value }))} />
                 </div>
             </div>
 
