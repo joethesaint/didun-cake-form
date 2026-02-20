@@ -131,21 +131,61 @@ body {
   }
 
   body {
-    background-color: white;
-    margin: 0;
+    background-color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .paper-container {
-    margin: 0;
-    box-shadow: none;
-    width: 210mm;
-    height: 297mm;
-    padding: 10mm 15mm;
-    aspect-ratio: auto;
+    margin: 0 !important;
+    box-shadow: none !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 15mm 20mm !important;
+    aspect-ratio: auto !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  /* Force desktop grid on print even if viewed on mobile */
+  .responsive-grid-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 15px !important;
+  }
+
+  .responsive-grid-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+  }
+
+  .flex-responsive {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 20px !important;
+  }
+
+  .field-group {
+    flex-direction: row !important;
+    align-items: flex-end !important;
+  }
+
+  .field-line {
+    width: auto !important;
   }
 
   .no-print {
     display: none !important;
+  }
+
+  /* Scale down slightly if content is tight */
+  .paper-container {
+    transform-origin: top left;
+    zoom: 0.98;
   }
 }
 
