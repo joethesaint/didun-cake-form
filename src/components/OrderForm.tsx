@@ -249,30 +249,58 @@ const OrderForm: React.FC = () => {
                 </a>
             </div>
 
-            <div className="no-print" style={{ position: 'fixed', bottom: '20px', right: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-                {!isFormValid && <span style={{ color: '#d32f2f', fontSize: '12px', fontWeight: 'bold' }}>Please fill Name, Phone, and Delivery Date</span>}
-                <button 
-                    disabled={!isFormValid}
-                    onClick={() => window.print()} 
-                    style={{ 
-                        padding: '10px 20px', 
-                        background: isFormValid ? 'black' : '#ccc', 
-                        color: 'white', 
-                        border: 'none', 
-                        borderRadius: '4px', 
-                        cursor: isFormValid ? 'pointer' : 'not-allowed', 
-                        fontFamily: 'var(--font-sans)', 
-                        fontWeight: 600 
-                    }}
-                >
-                    Print / Export PDF
-                </button>
-                <button 
-                    onClick={() => { if(confirm('Clear all form data?')) { setFormData({ ...formData, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' }); localStorage.removeItem(STORAGE_KEY); } }}
-                    style={{ padding: '10px 10px', background: 'transparent', color: '#666', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}
-                >
-                    Clear Form
-                </button>
+            <div className="no-print">
+                {!isFormValid && (
+                    <span style={{ 
+                        color: '#d32f2f', 
+                        fontSize: '13px', 
+                        fontWeight: '600',
+                        textAlign: 'center',
+                        padding: '4px 10px',
+                        background: '#ffebee',
+                        borderRadius: '4px',
+                        width: '100%',
+                        maxWidth: '300px'
+                    }}>
+                        ⚠️ Fill Name, Phone & Date to Print
+                    </span>
+                )}
+                <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center', maxWidth: '400px' }}>
+                    <button 
+                        disabled={!isFormValid}
+                        onClick={() => window.print()} 
+                        style={{ 
+                            flex: 2,
+                            padding: '12px 20px', 
+                            background: isFormValid ? 'black' : '#ccc', 
+                            color: 'white', 
+                            border: 'none', 
+                            borderRadius: '4px', 
+                            cursor: isFormValid ? 'pointer' : 'not-allowed', 
+                            fontFamily: 'var(--font-sans)', 
+                            fontWeight: 600,
+                            fontSize: '15px'
+                        }}
+                    >
+                        Print / Export PDF
+                    </button>
+                    <button 
+                        onClick={() => { if(confirm('Clear all form data?')) { setFormData({ ...formData, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' }); localStorage.removeItem(STORAGE_KEY); } }}
+                        style={{ 
+                            flex: 1,
+                            padding: '12px 10px', 
+                            background: 'white', 
+                            color: '#666', 
+                            border: '1px solid #ccc', 
+                            borderRadius: '4px', 
+                            cursor: 'pointer', 
+                            fontSize: '13px',
+                            fontWeight: 500
+                        }}
+                    >
+                        Clear
+                    </button>
+                </div>
             </div>
 
             <style>{`
