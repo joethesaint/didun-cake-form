@@ -318,8 +318,8 @@ const OrderForm: React.FC = () => {
             </div>
 
             <div style={{ marginTop: 'auto', borderTop: '2px solid #000', paddingTop: '15px', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-                <div style={{ fontFamily: 'sans-serif', fontWeight: 'bold', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    Date: <input className="field-line" style={{ width: '250px', fontSize: '18px' }} aria-label="Order Date" value={formData.date} onChange={e => setFormData((p: OrderFormData) => ({ ...p, date: e.target.value }))} />
+                <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 'bold', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    Date: <input className="field-line" style={{ width: '250px', fontSize: '16px' }} aria-label="Order Date" value={formData.date} onChange={e => setFormData((p: OrderFormData) => ({ ...p, date: e.target.value }))} />
                 </div>
             </div>
 
