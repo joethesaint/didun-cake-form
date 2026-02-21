@@ -236,7 +236,8 @@ const OrderForm: React.FC = () => {
                 <span>Special Instructions :</span>
                 <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Special Instructions" value={formData.specialInstructions} onChange={e => setFormData(p => ({ ...p, specialInstructions: e.target.value }))} />
             </div>
-            <div className="field-line" style={{ height: '15px' }}></div>
+            <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
+            <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
 
             {/* Footer Branding */}
             <div style={{ marginTop: 'auto', borderTop: '2px solid #000', paddingTop: '15px', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
