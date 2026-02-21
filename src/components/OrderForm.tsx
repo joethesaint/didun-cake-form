@@ -277,8 +277,13 @@ const OrderForm: React.FC = () => {
             )}
             <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center', maxWidth: '400px' }}>
                 <button 
-                    disabled={!isFormValid}
-                    onClick={() => window.print()} 
+                    onClick={() => {
+                        if (isFormValid) {
+                            window.print();
+                        } else {
+                            alert('Please fill in the Name, Phone Number, and Delivery Date before printing.');
+                        }
+                    }} 
                     style={{ 
                         flex: 2,
                         padding: '12px 20px', 
@@ -286,7 +291,7 @@ const OrderForm: React.FC = () => {
                         color: 'white', 
                         border: 'none', 
                         borderRadius: '4px', 
-                        cursor: isFormValid ? 'pointer' : 'not-allowed', 
+                        cursor: 'pointer', 
                         fontFamily: 'var(--font-sans)', 
                         fontWeight: 600,
                         fontSize: '15px'
