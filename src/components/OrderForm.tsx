@@ -4,6 +4,7 @@ import { toPng } from 'html-to-image';
 const STORAGE_KEY = 'didun_order_form_data';
 // No default placeholder here to avoid the "234" error
 const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '';
+const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || '';
 
 interface OrderFormData {
     isFirstTime: boolean | null;
@@ -33,6 +34,7 @@ interface OrderFormData {
 const OrderForm: React.FC = () => {
     const formRef = useRef<HTMLDivElement>(null);
     const [isExporting, setIsExporting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState<OrderFormData>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -71,6 +73,66 @@ const OrderForm: React.FC = () => {
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
+
+    const saveToGoogleSheets = async () => {
+        if (!GOOGLE_SHEETS_URL) {
+            console.warn("Google Sheets URL not provided. Skipping background sync.");
+            return;
+        }
+
+        try {
+            // Flatten arrays for cleaner spreadsheet columns
+            const payload = {
+                ...formData,
+                timestamp: new Date().toISOString(),
+                cakeFlavor: formData.cakeFlavor.join(', '),
+                specialFlavor: formData.specialFlavor.join(', '),
+                filling: formData.filling.join(', '),
+                decorative: formData.decorative.join(', '),
+                shape: formData.shape || formData.shapeCustom,
+                size: formData.size || formData.sizeOther
+            };
+
+            // Use 'no-cors' for Google Apps Script to avoid preflight issues 
+            // since we don't need a response
+            fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).catch(e => console.error("Async Sheets sync failed:", e));
+
+            // We don't await this fetch because we want "silent background execution"
+            // as requested by the user.
+        } catch (err) {
+            console.error('Error initiating Sheets sync:', err);
+        }
+    };
+
+    const handleSubmit = async () => {
+        if (!isFormValid) {
+            const missing = [];
+            if (!formData.name.trim()) missing.push('Name');
+            if (!formData.phone.trim()) missing.push('Phone');
+            if (!formData.deliveryDate) missing.push('Delivery Date');
+            alert(`Missing: ${missing.join(', ')}. Please fill these to submit.`);
+            return;
+        }
+
+        setIsSubmitting(true);
+        
+        // 1. Silent Background Execution (Google Sheets)
+        saveToGoogleSheets();
+        
+        // 2. Immediate Hand-off to WhatsApp
+        // We add a tiny delay to ensure the fetch has hit the network stack
+        setTimeout(() => {
+            sendToWhatsApp();
+            setIsSubmitting(false);
+        }, 300);
+    };
 
     const sendToWhatsApp = () => {
         if (!isFormValid) {
@@ -414,25 +476,25 @@ const OrderForm: React.FC = () => {
             )}
             <div className="action-buttons-container">
                 <button 
-                    onClick={sendToWhatsApp}
-                    className={`btn-whatsapp ${!isFormValid ? 'btn-disabled' : ''}`}
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
+                    style={{ flex: '1 1 100%', marginBottom: '5px' }}
                 >
-                    Send Order via WhatsApp
+                    {isSubmitting ? 'Processing...' : 'Submit Order & Send via WhatsApp'}
                 </button>
 
                 <button 
                     onClick={exportImage}
                     disabled={isExporting}
-                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
-                    style={{ opacity: isExporting ? 0.7 : 1 }}
+                    className={`btn-secondary ${!isFormValid ? 'btn-disabled' : ''}`}
                 >
-                    {isExporting ? 'Generating Summary...' : 'Download Order Summary'}
+                    {isExporting ? 'Generating Summary...' : 'Download Image Summary'}
                 </button>
                 
                 <button 
                     onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
                     className="btn-tertiary"
-                    style={{ flex: '1 1 100%', marginTop: '5px' }}
                 >
                     Clear Form
                 </button>
