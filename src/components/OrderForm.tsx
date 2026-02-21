@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
 
@@ -28,6 +29,8 @@ interface OrderFormData {
 }
 
 const OrderForm: React.FC = () => {
+    const formRef = useRef<HTMLDivElement>(null);
+    const [isExporting, setIsExporting] = useState(false);
     const [formData, setFormData] = useState<OrderFormData>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -67,6 +70,42 @@ const OrderForm: React.FC = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
 
+    const exportImage = async () => {
+        if (!isFormValid) {
+            const missing = [];
+            if (!formData.name.trim()) missing.push('Name');
+            if (!formData.phone.trim()) missing.push('Phone');
+            if (!formData.deliveryDate) missing.push('Delivery Date');
+            alert(`Missing: ${missing.join(', ')}. Please fill these to export.`);
+            return;
+        }
+
+        if (formRef.current === null) return;
+        
+        setIsExporting(true);
+        try {
+            // Using a slightly higher scale for better quality (2x standard resolution)
+            const dataUrl = await toPng(formRef.current, { 
+                cacheBust: true,
+                pixelRatio: 2,
+                backgroundColor: '#ffffff',
+                style: {
+                    margin: '0',
+                }
+            });
+            
+            const link = document.createElement('a');
+            link.download = `cake-order-${formData.name.replace(/\s+/g, '-').toLowerCase() || 'form'}.png`;
+            link.href = dataUrl;
+            link.click();
+        } catch (err) {
+            console.error('oops, something went wrong!', err);
+            alert('Failed to generate image. Please try again.');
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
     const isFormValid = formData.name.trim() !== '' && 
                        formData.phone.trim() !== '' && 
                        formData.deliveryDate !== '';
@@ -83,7 +122,7 @@ const OrderForm: React.FC = () => {
 
     return (
     <>
-        <div className="paper-container">
+        <div ref={formRef} className="paper-container">
             <div className="logo-script">Dídùn</div>
             <div className="header-title">CAKE ORDER FORM</div>
 
@@ -301,11 +340,31 @@ const OrderForm: React.FC = () => {
                     ⚠️ Fill Name, Phone & Date to Print
                 </span>
             )}
-            <div style={{ display: 'flex', gap: '10px', width: '100%', justifyContent: 'center', maxWidth: '400px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', width: '100%', justifyContent: 'center', maxWidth: '400px' }}>
+                <button 
+                    onClick={exportImage}
+                    disabled={isExporting}
+                    style={{ 
+                        flex: '1 1 100%',
+                        padding: '14px 20px', 
+                        background: isFormValid ? 'black' : '#ccc', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '4px', 
+                        cursor: isExporting ? 'wait' : 'pointer', 
+                        fontFamily: 'var(--font-sans)', 
+                        fontWeight: 700,
+                        fontSize: '16px',
+                        transition: 'opacity 0.2s',
+                        opacity: isExporting ? 0.7 : 1
+                    }}
+                >
+                    {isExporting ? 'Generating Image...' : 'Save as Image (PNG)'}
+                </button>
+                
                 <button 
                     onClick={() => {
                         if (isFormValid) {
-                            // Small delay helps iOS Safari register the user action correctly for print
                             setTimeout(() => {
                                 window.print();
                             }, 200);
@@ -318,20 +377,21 @@ const OrderForm: React.FC = () => {
                         }
                     }} 
                     style={{ 
-                        flex: 2,
-                        padding: '12px 20px', 
-                        background: isFormValid ? 'black' : '#ccc', 
-                        color: 'white', 
-                        border: 'none', 
+                        flex: 1,
+                        padding: '12px 10px', 
+                        background: 'white', 
+                        color: '#333', 
+                        border: '1px solid #333', 
                         borderRadius: '4px', 
                         cursor: 'pointer', 
                         fontFamily: 'var(--font-sans)', 
-                        fontWeight: 600,
-                        fontSize: '15px'
+                        fontWeight: 500,
+                        fontSize: '13px'
                     }}
                 >
-                    Print / Export PDF
+                    Print Option
                 </button>
+                
                 <button 
                     onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
                     style={{ 
@@ -346,7 +406,7 @@ const OrderForm: React.FC = () => {
                         fontWeight: 500
                     }}
                 >
-                    Clear
+                    Clear Form
                 </button>
             </div>
         </div>
