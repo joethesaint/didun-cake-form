@@ -128,18 +128,17 @@ body {
 
 @media print {
   @page {
-    /* Very tall page to force single sheet */
-    size: 210mm 500mm; 
+    size: A4 portrait;
     margin: 0;
   }
 
   html, body {
     width: 210mm !important;
-    height: auto !important;
-    overflow: visible !important;
+    height: 297mm !important;
+    overflow: hidden !important;
+    background-color: white !important;
     margin: 0 !important;
     padding: 0 !important;
-    background-color: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -147,17 +146,24 @@ body {
   .paper-container {
     margin: 0 !important;
     box-shadow: none !important;
-    width: 210mm !important; /* Fill A4 width exactly */
-    height: auto !important;
-    min-height: 297mm !important;
-    padding: 15mm 20mm !important; /* Content margins */
-    position: relative !important;
-    display: block !important;
-    border: none !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 15mm 15mm !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     background-color: white !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border: none !important;
     
-    /* Prevent splitting */
-    page-break-inside: avoid !important;
+    /* Best practice: Scale slightly to handle browser rounding differences */
+    transform: scale(0.99) !important;
+    transform-origin: top center !important;
+    
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
     break-inside: avoid !important;
   }
 
@@ -165,7 +171,7 @@ body {
     display: none !important;
   }
 
-  /* Ensure rows stay rows */
+  /* Force layout stability */
   .responsive-grid-3 {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -181,16 +187,16 @@ body {
   .field-group {
     display: flex !important;
     flex-direction: row !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 8px !important;
   }
 
   .logo-script {
-    font-size: 70px !important;
-    margin-bottom: 5px !important;
+    font-size: 60px !important;
+    margin-bottom: 0px !important;
   }
 
   .header-title {
-    font-size: 28px !important;
+    font-size: 24px !important;
     margin-bottom: 20px !important;
   }
 }
