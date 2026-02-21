@@ -115,7 +115,10 @@ const OrderForm: React.FC = () => {
             `*Special Instructions:* ${formData.specialInstructions || 'None'}`;
 
         const encodedMessage = encodeURIComponent(messageText);
-        window.open(`https://wa.me/${cleanPhone}?text=${encodedMessage}`, '_blank');
+        const finalLink = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+        
+        // Use window.location.assign for better mobile/production compatibility (avoids popup blockers)
+        window.location.assign(finalLink);
     };
 
     const exportImage = async () => {
