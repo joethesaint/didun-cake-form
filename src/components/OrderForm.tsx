@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
 
@@ -67,7 +66,10 @@ const OrderForm: React.FC = () => {
     });
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        const handler = setTimeout(() => {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        }, 500);
+        return () => clearTimeout(handler);
     }, [formData]);
 
     const exportImage = async () => {
@@ -84,6 +86,7 @@ const OrderForm: React.FC = () => {
         
         setIsExporting(true);
         try {
+            const { toPng } = await import('html-to-image');
             const dataUrl = await toPng(formRef.current, { 
                 cacheBust: true,
                 useCORS: true,
@@ -333,27 +336,11 @@ const OrderForm: React.FC = () => {
         </div>
 
         <div className="no-print">
-            {!isFormValid && (
-                <span style={{ 
-                    color: '#d32f2f', 
-                    fontSize: '13px', 
-                    fontWeight: '600',
-                    textAlign: 'center',
-                    padding: '4px 10px',
-                    background: '#ffebee',
-                    borderRadius: '4px',
-                    width: '100%',
-                    maxWidth: '300px',
-                    marginBottom: '5px'
-                }}>
-                    ⚠️ Fill Name, Phone & Date to Download
-                </span>
-            )}
             <div className="action-buttons-container">
                 <button 
                     onClick={exportImage}
                     disabled={isExporting}
-                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
+                    className="btn-primary"
                     style={{ flex: '1 1 100%', marginBottom: '5px' }}
                 >
                     {isExporting ? 'Generating Summary...' : 'Download Image Summary'}
