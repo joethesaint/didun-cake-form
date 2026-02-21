@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
-// Read from .env or fallback to empty string
-const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '';
 
 interface OrderFormData {
     isFirstTime: boolean | null;
@@ -71,54 +69,6 @@ const OrderForm: React.FC = () => {
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
-
-    const sendToWhatsApp = () => {
-        if (!isFormValid) {
-            const missing = [];
-            if (!formData.name.trim()) missing.push('Name');
-            if (!formData.phone.trim()) missing.push('Phone');
-            if (!formData.deliveryDate) missing.push('Delivery Date');
-            alert(`Missing: ${missing.join(', ')}. Please fill these to send.`);
-            return;
-        }
-
-        // Sanitize phone number (remove +, spaces, dashes)
-        const cleanPhone = VENDOR_PHONE.replace(/\D/g, '');
-        
-        // WhatsApp numbers should generally be 10-15 digits
-        if (!cleanPhone || cleanPhone.length < 10) {
-            alert(
-                '❌ Vendor phone number not found or too short!\n\n' +
-                'If you are on LOCALHOST:\n' +
-                '1. Check your .env file.\n' +
-                '2. RESTART your dev server (Ctrl+C, then npm run dev).\n\n' +
-                'If you are on VERCEL:\n' +
-                '1. Add VITE_VENDOR_PHONE in Settings > Environment Variables.\n' +
-                '2. Redeploy your project.'
-            );
-            return;
-        }
-
-        const messageText = 
-            `*New Cake Order!*\n\n` +
-            `*Name:* ${formData.name}\n` +
-            `*Phone:* ${formData.phone}\n` +
-            `*Delivery Date:* ${formData.deliveryDate}\n` +
-            `*Occasion:* ${formData.occasion || 'N/A'}\n` +
-            `*Tiers:* ${formData.tiers || 'N/A'}\n` +
-            `*Shape:* ${formData.shape || formData.shapeCustom || 'N/A'}\n` +
-            `*Size:* ${formData.size || formData.sizeOther || 'N/A'}\n\n` +
-            `*Flavors:* ${[...formData.cakeFlavor, ...formData.specialFlavor].join(', ') || 'N/A'}\n` +
-            `*Filling:* ${formData.filling.join(', ') || 'N/A'}\n` +
-            `*Decorative:* ${formData.decorative.join(', ') || 'N/A'}\n\n` +
-            `*Address:* ${formData.address || 'Pick up'}\n` +
-            `*Special Instructions:* ${formData.specialInstructions || 'None'}`;
-
-        const encodedMessage = encodeURIComponent(messageText);
-        const finalLink = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-        
-        window.location.assign(finalLink);
-    };
 
     const exportImage = async () => {
         if (!isFormValid) {
@@ -395,22 +345,15 @@ const OrderForm: React.FC = () => {
                     maxWidth: '300px',
                     marginBottom: '5px'
                 }}>
-                    ⚠️ Fill Name, Phone & Date to Send
+                    ⚠️ Fill Name, Phone & Date to Download
                 </span>
             )}
             <div className="action-buttons-container">
                 <button 
-                    onClick={sendToWhatsApp}
-                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
-                    style={{ flex: '1 1 100%', marginBottom: '5px' }}
-                >
-                    Send Order via WhatsApp
-                </button>
-
-                <button 
                     onClick={exportImage}
                     disabled={isExporting}
-                    className={`btn-secondary ${!isFormValid ? 'btn-disabled' : ''}`}
+                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
+                    style={{ flex: '1 1 100%', marginBottom: '5px' }}
                 >
                     {isExporting ? 'Generating Summary...' : 'Download Image Summary'}
                 </button>
@@ -418,6 +361,7 @@ const OrderForm: React.FC = () => {
                 <button 
                     onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
                     className="btn-tertiary"
+                    style={{ flex: '1 1 100%' }}
                 >
                     Clear Form
                 </button>
