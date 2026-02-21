@@ -81,22 +81,31 @@ const OrderForm: React.FC = () => {
             return;
         }
 
-        const message = 
-            `*New Cake Order!*%0A%0A` +
-            `*Name:* ${formData.name}%0A` +
-            `*Phone:* ${formData.phone}%0A` +
-            `*Delivery Date:* ${formData.deliveryDate}%0A` +
-            `*Occasion:* ${formData.occasion || 'N/A'}%0A` +
-            `*Tiers:* ${formData.tiers || 'N/A'}%0A` +
-            `*Shape:* ${formData.shape || formData.shapeCustom || 'N/A'}%0A` +
-            `*Size:* ${formData.size || formData.sizeOther || 'N/A'}%0A%0A` +
-            `*Flavors:* ${[...formData.cakeFlavor, ...formData.specialFlavor].join(', ') || 'N/A'}%0A` +
-            `*Filling:* ${formData.filling.join(', ') || 'N/A'}%0A` +
-            `*Decorative:* ${formData.decorative.join(', ') || 'N/A'}%0A%0A` +
-            `*Address:* ${formData.address || 'Pick up'}%0A` +
+        // Sanitize phone number (remove +, spaces, dashes)
+        const cleanPhone = VENDOR_PHONE.replace(/\D/g, '');
+        
+        if (!cleanPhone || cleanPhone.includes('X')) {
+            alert('Vendor phone number not configured. Please set VITE_VENDOR_PHONE in your environment.');
+            return;
+        }
+
+        const messageText = 
+            `*New Cake Order!*\n\n` +
+            `*Name:* ${formData.name}\n` +
+            `*Phone:* ${formData.phone}\n` +
+            `*Delivery Date:* ${formData.deliveryDate}\n` +
+            `*Occasion:* ${formData.occasion || 'N/A'}\n` +
+            `*Tiers:* ${formData.tiers || 'N/A'}\n` +
+            `*Shape:* ${formData.shape || formData.shapeCustom || 'N/A'}\n` +
+            `*Size:* ${formData.size || formData.sizeOther || 'N/A'}\n\n` +
+            `*Flavors:* ${[...formData.cakeFlavor, ...formData.specialFlavor].join(', ') || 'N/A'}\n` +
+            `*Filling:* ${formData.filling.join(', ') || 'N/A'}\n` +
+            `*Decorative:* ${formData.decorative.join(', ') || 'N/A'}\n\n` +
+            `*Address:* ${formData.address || 'Pick up'}\n` +
             `*Special Instructions:* ${formData.specialInstructions || 'None'}`;
 
-        window.open(`https://wa.me/${VENDOR_PHONE}?text=${message}`, '_blank');
+        const encodedMessage = encodeURIComponent(messageText);
+        window.open(`https://wa.me/${cleanPhone}?text=${encodedMessage}`, '_blank');
     };
 
     const exportImage = async () => {
