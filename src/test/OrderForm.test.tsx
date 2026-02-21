@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import OrderForm from '../components/OrderForm';
 import '@testing-library/jest-dom';
 
@@ -22,8 +22,6 @@ describe('OrderForm', () => {
 
     it('validates required fields for the action buttons', () => {
         render(<OrderForm />);
-        const saveBtn = screen.getByRole('button', { name: /Download Order Summary/i });
-        const waBtn = screen.getByRole('button', { name: /Send Order via WhatsApp/i });
         
         // Initially disabled style (using background color or just checking if it reports missing)
         expect(screen.getByText(/Fill Name, Phone & Date to Download\/Send/i)).toBeInTheDocument();
