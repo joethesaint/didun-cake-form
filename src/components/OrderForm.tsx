@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
-// No default placeholder here to avoid the "234" error
+// Read from .env or fallback to empty string
 const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '';
-const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || '';
 
 interface OrderFormData {
     isFirstTime: boolean | null;
@@ -33,8 +32,7 @@ interface OrderFormData {
 
 const OrderForm: React.FC = () => {
     const formRef = useRef<HTMLDivElement>(null);
-    const [busy, setBusy] = useState(false);
-    const [statusText, setStatusText] = useState('');
+    const [isExporting, setIsExporting] = useState(false);
     const [formData, setFormData] = useState<OrderFormData>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -71,73 +69,8 @@ const OrderForm: React.FC = () => {
     });
 
     useEffect(() => {
-        // Environment Diagnostic on Mount
-        if (!VENDOR_PHONE) {
-            console.error('CRITICAL: VITE_VENDOR_PHONE is missing. WhatsApp will not work.');
-        }
-        if (!GOOGLE_SHEETS_URL) {
-            console.warn('VITE_GOOGLE_SHEETS_URL is missing. Sheets sync is disabled.');
-        }
-    }, []);
-
-    useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
-
-    const saveToGoogleSheets = async () => {
-        if (!GOOGLE_SHEETS_URL) {
-            console.warn("Google Sheets URL not provided. Skipping background sync.");
-            return;
-        }
-
-        try {
-            // Flatten arrays for cleaner spreadsheet columns
-            const payload = {
-                ...formData,
-                timestamp: new Date().toISOString(),
-                cakeFlavor: formData.cakeFlavor.join(', '),
-                specialFlavor: formData.specialFlavor.join(', '),
-                filling: formData.filling.join(', '),
-                decorative: formData.decorative.join(', '),
-                shape: formData.shape || formData.shapeCustom,
-                size: formData.size || formData.sizeOther
-            };
-
-            // Use 'no-cors' for Google Apps Script to avoid preflight issues 
-            // since we don't need a response
-            fetch(GOOGLE_SHEETS_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            }).catch(e => console.error("Async Sheets sync failed:", e));
-
-            // We don't await this fetch because we want "silent background execution"
-            // as requested by the user.
-        } catch (err) {
-            console.error('Error initiating Sheets sync:', err);
-        }
-    };
-
-    const handleSubmit = async () => {
-        if (!isFormValid || busy) return;
-
-        setBusy(true);
-        setStatusText('Syncing...');
-        
-        // 1. Silent Background Execution (Google Sheets)
-        saveToGoogleSheets();
-        
-        // 2. Immediate Hand-off to WhatsApp
-        setTimeout(() => {
-            setStatusText('Opening WhatsApp...');
-            sendToWhatsApp();
-            setBusy(false);
-            setStatusText('');
-        }, 800);
-    };
 
     const sendToWhatsApp = () => {
         if (!isFormValid) {
@@ -184,19 +117,23 @@ const OrderForm: React.FC = () => {
         const encodedMessage = encodeURIComponent(messageText);
         const finalLink = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
         
-        // Use window.location.assign for better mobile/production compatibility (avoids popup blockers)
         window.location.assign(finalLink);
     };
 
     const exportImage = async () => {
-        if (!isFormValid || busy) return;
+        if (!isFormValid) {
+            const missing = [];
+            if (!formData.name.trim()) missing.push('Name');
+            if (!formData.phone.trim()) missing.push('Phone');
+            if (!formData.deliveryDate) missing.push('Delivery Date');
+            alert(`Missing: ${missing.join(', ')}. Please fill these to export.`);
+            return;
+        }
 
         if (formRef.current === null) return;
         
-        setBusy(true);
-        setStatusText('Generating...');
+        setIsExporting(true);
         try {
-            // Using a slightly higher scale for better quality (2x standard resolution)
             const dataUrl = await toPng(formRef.current, { 
                 cacheBust: true,
                 pixelRatio: 2,
@@ -206,7 +143,6 @@ const OrderForm: React.FC = () => {
                 }
             });
             
-            // Try Web Share API for mobile devices (allows sharing image directly to WhatsApp)
             if (navigator.share && navigator.canShare) {
                 const blob = await (await fetch(dataUrl)).blob();
                 const file = new File([blob], `cake-order-${formData.name.replace(/\s+/g, '-').toLowerCase()}.png`, { type: 'image/png' });
@@ -218,17 +154,13 @@ const OrderForm: React.FC = () => {
                             title: 'Cake Order Summary',
                             text: `New order from ${formData.name}`
                         });
-                        setBusy(false);
-                        setStatusText('');
-                        return; // Successfully shared
+                        return;
                     } catch (shareError) {
-                        // User cancelled or share failed, fallback to download
                         console.log('Share failed or cancelled', shareError);
                     }
                 }
             }
 
-            // Fallback: Download the image
             const link = document.createElement('a');
             link.download = `cake-order-${formData.name.replace(/\s+/g, '-').toLowerCase() || 'form'}.png`;
             link.href = dataUrl;
@@ -237,8 +169,7 @@ const OrderForm: React.FC = () => {
             console.error('oops, something went wrong!', err);
             alert('Failed to generate image. Please try again.');
         } finally {
-            setBusy(false);
-            setStatusText('');
+            setIsExporting(false);
         }
     };
 
@@ -341,7 +272,6 @@ const OrderForm: React.FC = () => {
 
             {/* Main Grid Section */}
             <div className="responsive-grid-3" style={{ marginBottom: '25px' }}>
-                {/* Cake Flavor */}
                 <div className="section-box">
                     <div className="section-title">Cake Flavor</div>
                     {['Vanilla', 'Chocolate', 'Red Velvet'].map(f => (
@@ -363,10 +293,8 @@ const OrderForm: React.FC = () => {
                         <span>Other:</span>
                         <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other special flavor" value={formData.specialFlavorOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, specialFlavorOther: e.target.value }))} />
                     </div>
-                    <p style={{ fontSize: '11px', fontStyle: 'italic', marginTop: '10px' }}>• Extra N3,000 for special flavoured cakes</p>
                 </div>
 
-                {/* Filling */}
                 <div className="section-box">
                     <div className="section-title">Filling</div>
                     {['Vanilla', 'Salted caramel', 'Raspberry', 'Strawberry', 'Crunchy peanut', 'Chocolate', 'Buttercream'].map(f => (
@@ -382,7 +310,6 @@ const OrderForm: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Decorative additions */}
                 <div className="section-box">
                     <div className="section-title">Decorative additions</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
@@ -401,7 +328,6 @@ const OrderForm: React.FC = () => {
                 </div>
             </div>
 
-            {/* Bottom Grid Section */}
             <div className="responsive-grid-2" style={{ marginBottom: '15px' }}>
                 <div className="section-box">
                     <div className="section-title">Size</div>
@@ -431,15 +357,11 @@ const OrderForm: React.FC = () => {
                 </div>
             </div>
 
-            {/* Special Instructions */}
             <div className="field-group" style={{ marginTop: '10px' }}>
                 <span>Special Instructions :</span>
                 <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Special Instructions" value={formData.specialInstructions} onChange={e => setFormData((p: OrderFormData) => ({ ...p, specialInstructions: e.target.value }))} />
             </div>
-            <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
-            <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
 
-            {/* Footer Branding */}
             <div style={{ marginTop: 'auto', borderTop: '2px solid #000', paddingTop: '15px', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                 <div style={{ fontFamily: 'sans-serif', fontWeight: 'bold', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                     Date: <input className="field-line" style={{ width: '250px', fontSize: '18px' }} aria-label="Order Date" value={formData.date} onChange={e => setFormData((p: OrderFormData) => ({ ...p, date: e.target.value }))} />
@@ -473,33 +395,29 @@ const OrderForm: React.FC = () => {
                     maxWidth: '300px',
                     marginBottom: '5px'
                 }}>
-                    ⚠️ Fill Name, Phone & Date to Download/Send
+                    ⚠️ Fill Name, Phone & Date to Send
                 </span>
             )}
             <div className="action-buttons-container">
                 <button 
-                    onClick={handleSubmit}
-                    disabled={busy}
+                    onClick={sendToWhatsApp}
                     className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
                     style={{ flex: '1 1 100%', marginBottom: '5px' }}
                 >
-                    {busy && statusText.includes('Syncing') ? 'Syncing...' : 
-                     busy && statusText.includes('WhatsApp') ? 'Opening WhatsApp...' : 
-                     'Submit Order & Send to WhatsApp'}
+                    Send Order via WhatsApp
                 </button>
 
                 <button 
                     onClick={exportImage}
-                    disabled={busy}
+                    disabled={isExporting}
                     className={`btn-secondary ${!isFormValid ? 'btn-disabled' : ''}`}
                 >
-                    {busy && statusText.includes('Generating') ? 'Generating Image...' : 'Download Image Summary'}
+                    {isExporting ? 'Generating Summary...' : 'Download Image Summary'}
                 </button>
                 
                 <button 
                     onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
                     className="btn-tertiary"
-                    style={{ flex: '1 1 100%', marginTop: '5px' }}
                 >
                     Clear Form
                 </button>
