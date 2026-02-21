@@ -110,6 +110,64 @@ body {
 }
 
 /* Maintain Viewport Queries ONLY for the fixed UI elements and body padding */
+/* Print/Snapshot Template - LOCKED to Desktop Dimensions */
+.print-template {
+  width: 1080px !important;
+  background-color: white;
+  padding: 40px 50px;
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  /* Quality Add-ons */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.print-template .paper-container {
+  width: 1080px !important;
+  max-width: 1080px !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+/* Force Multi-column grids in the template regardless of screen size */
+.print-template .responsive-grid-3 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+}
+
+.print-template .responsive-grid-2 {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 30px !important;
+}
+
+.print-template .field-group {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  gap: 10px !important;
+}
+
+.print-template .field-line {
+  font-size: 14px !important;
+}
+
+.print-template .logo-script {
+  font-size: 72px !important;
+}
+
+.print-template .header-title {
+  font-size: 28px !important;
+}
+
 @media (max-width: 768px) {
   body {
     padding-bottom: 180px;
