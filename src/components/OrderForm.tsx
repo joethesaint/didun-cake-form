@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
+const VENDOR_PHONE = '2348000000000'; // Replace with the actual vendor number
 
 interface OrderFormData {
     isFirstTime: boolean | null;
@@ -70,6 +71,34 @@ const OrderForm: React.FC = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
 
+    const sendToWhatsApp = () => {
+        if (!isFormValid) {
+            const missing = [];
+            if (!formData.name.trim()) missing.push('Name');
+            if (!formData.phone.trim()) missing.push('Phone');
+            if (!formData.deliveryDate) missing.push('Delivery Date');
+            alert(`Missing: ${missing.join(', ')}. Please fill these to send.`);
+            return;
+        }
+
+        const message = 
+            `*New Cake Order!*%0A%0A` +
+            `*Name:* ${formData.name}%0A` +
+            `*Phone:* ${formData.phone}%0A` +
+            `*Delivery Date:* ${formData.deliveryDate}%0A` +
+            `*Occasion:* ${formData.occasion || 'N/A'}%0A` +
+            `*Tiers:* ${formData.tiers || 'N/A'}%0A` +
+            `*Shape:* ${formData.shape || formData.shapeCustom || 'N/A'}%0A` +
+            `*Size:* ${formData.size || formData.sizeOther || 'N/A'}%0A%0A` +
+            `*Flavors:* ${[...formData.cakeFlavor, ...formData.specialFlavor].join(', ') || 'N/A'}%0A` +
+            `*Filling:* ${formData.filling.join(', ') || 'N/A'}%0A` +
+            `*Decorative:* ${formData.decorative.join(', ') || 'N/A'}%0A%0A` +
+            `*Address:* ${formData.address || 'Pick up'}%0A` +
+            `*Special Instructions:* ${formData.specialInstructions || 'None'}`;
+
+        window.open(`https://wa.me/${VENDOR_PHONE}?text=${message}`, '_blank');
+    };
+
     const exportImage = async () => {
         if (!isFormValid) {
             const missing = [];
@@ -94,6 +123,27 @@ const OrderForm: React.FC = () => {
                 }
             });
             
+            // Try Web Share API for mobile devices (allows sharing image directly to WhatsApp)
+            if (navigator.share && navigator.canShare) {
+                const blob = await (await fetch(dataUrl)).blob();
+                const file = new File([blob], `cake-order-${formData.name.replace(/\s+/g, '-').toLowerCase()}.png`, { type: 'image/png' });
+                
+                if (navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Cake Order Summary',
+                            text: `New order from ${formData.name}`
+                        });
+                        return; // Successfully shared
+                    } catch (shareError) {
+                        // User cancelled or share failed, fallback to download
+                        console.log('Share failed or cancelled', shareError);
+                    }
+                }
+            }
+
+            // Fallback: Download the image
             const link = document.createElement('a');
             link.download = `cake-order-${formData.name.replace(/\s+/g, '-').toLowerCase() || 'form'}.png`;
             link.href = dataUrl;
@@ -337,10 +387,17 @@ const OrderForm: React.FC = () => {
                     maxWidth: '300px',
                     marginBottom: '5px'
                 }}>
-                    ⚠️ Fill Name, Phone & Date to Download
+                    ⚠️ Fill Name, Phone & Date to Download/Send
                 </span>
             )}
             <div className="action-buttons-container">
+                <button 
+                    onClick={sendToWhatsApp}
+                    className={`btn-whatsapp ${!isFormValid ? 'btn-disabled' : ''}`}
+                >
+                    Send Order via WhatsApp
+                </button>
+
                 <button 
                     onClick={exportImage}
                     disabled={isExporting}

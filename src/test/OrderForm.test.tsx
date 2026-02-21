@@ -20,12 +20,13 @@ describe('OrderForm', () => {
         expect(screen.getByText(/CAKE ORDER FORM/i)).toBeInTheDocument();
     });
 
-    it('validates required fields for the save button', () => {
+    it('validates required fields for the action buttons', () => {
         render(<OrderForm />);
         const saveBtn = screen.getByRole('button', { name: /Download Order Summary/i });
+        const waBtn = screen.getByRole('button', { name: /Send Order via WhatsApp/i });
         
         // Initially disabled style (using background color or just checking if it reports missing)
-        expect(screen.getByText(/Fill Name, Phone & Date to Download/i)).toBeInTheDocument();
+        expect(screen.getByText(/Fill Name, Phone & Date to Download\/Send/i)).toBeInTheDocument();
 
         // Fill fields
         fireEvent.change(screen.getByLabelText(/Customer Name/i), { target: { value: 'John Doe' } });
@@ -33,7 +34,7 @@ describe('OrderForm', () => {
         fireEvent.change(screen.getByLabelText(/Delivery Date/i), { target: { value: '2026-12-25' } });
 
         // Warning should be gone
-        expect(screen.queryByText(/Fill Name, Phone & Date to Download/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Fill Name, Phone & Date to Download\/Send/i)).not.toBeInTheDocument();
     });
 
     it('toggles cake flavors correctly', () => {
