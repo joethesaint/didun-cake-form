@@ -82,9 +82,26 @@ const OrderForm: React.FC = () => {
         if (formRef.current === null) return;
         
         setIsExporting(true);
+
+        // Shadow Rendering Strategy:
+        // Create a hidden container that is exactly 1080px wide (Desktop width)
+        // This forces the CSS Container Queries to render the Desktop layout
+        const hiddenContainer = document.createElement('div');
+        hiddenContainer.style.position = 'absolute';
+        hiddenContainer.style.left = '-9999px';
+        hiddenContainer.style.top = '-9999px';
+        hiddenContainer.style.width = '1080px';
+        document.body.appendChild(hiddenContainer);
+
+        // Clone the form into the hidden container
+        const clone = formRef.current.cloneNode(true) as HTMLElement;
+        clone.style.width = '1080px';
+        clone.style.transform = 'none';
+        hiddenContainer.appendChild(clone);
+
         try {
             const { toPng } = await import('html-to-image');
-            const dataUrl = await toPng(formRef.current, { 
+            const dataUrl = await toPng(clone, { 
                 cacheBust: true,
                 useCORS: true,
                 pixelRatio: 3, // Ultra-sharp quality
@@ -93,8 +110,6 @@ const OrderForm: React.FC = () => {
                 style: {
                     margin: '0',
                     width: '1080px',
-                    minWidth: '1080px',
-                    transform: 'none',
                 }
             });
             
@@ -124,6 +139,8 @@ const OrderForm: React.FC = () => {
             console.error('oops, something went wrong!', err);
             alert('Failed to generate image. Please try again.');
         } finally {
+            // Cleanup
+            document.body.removeChild(hiddenContainer);
             setIsExporting(false);
         }
     };
