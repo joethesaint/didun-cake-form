@@ -32,7 +32,8 @@ interface OrderFormData {
 
 const OrderForm: React.FC = () => {
     const formRef = useRef<HTMLDivElement>(null);
-    const [isExporting, setIsExporting] = useState(false);
+    const [busy, setBusy] = useState(false);
+    const [statusText, setStatusText] = useState('');
     const [formData, setFormData] = useState<OrderFormData>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
@@ -67,6 +68,16 @@ const OrderForm: React.FC = () => {
             date: new Date().toLocaleDateString(),
         };
     });
+
+    useEffect(() => {
+        // Environment Diagnostic on Mount
+        if (!VENDOR_PHONE) {
+            console.error('CRITICAL: VITE_VENDOR_PHONE is missing. WhatsApp will not work.');
+        }
+        if (!GOOGLE_SHEETS_URL) {
+            console.warn('VITE_GOOGLE_SHEETS_URL is missing. Sheets sync is disabled.');
+        }
+    }, []);
 
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
@@ -414,19 +425,22 @@ const OrderForm: React.FC = () => {
             )}
             <div className="action-buttons-container">
                 <button 
-                    onClick={sendToWhatsApp}
-                    className={`btn-whatsapp ${!isFormValid ? 'btn-disabled' : ''}`}
+                    onClick={handleSubmit}
+                    disabled={busy}
+                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
+                    style={{ flex: '1 1 100%', marginBottom: '5px' }}
                 >
-                    Send Order via WhatsApp
+                    {busy && statusText.includes('Syncing') ? 'Syncing...' : 
+                     busy && statusText.includes('WhatsApp') ? 'Opening WhatsApp...' : 
+                     'Submit Order & Send to WhatsApp'}
                 </button>
 
                 <button 
                     onClick={exportImage}
-                    disabled={isExporting}
-                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
-                    style={{ opacity: isExporting ? 0.7 : 1 }}
+                    disabled={busy}
+                    className={`btn-secondary ${!isFormValid ? 'btn-disabled' : ''}`}
                 >
-                    {isExporting ? 'Generating Summary...' : 'Download Order Summary'}
+                    {busy && statusText.includes('Generating') ? 'Generating Image...' : 'Download Image Summary'}
                 </button>
                 
                 <button 
