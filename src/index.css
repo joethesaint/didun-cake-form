@@ -78,55 +78,6 @@ body {
   z-index: 100;
 }
 
-@media (max-width: 1080px) {
-  .paper-container {
-    width: 98vw;
-    margin: 10px auto;
-    padding: 20px 15px;
-    height: auto;
-    aspect-ratio: auto;
-    border-radius: 8px;
-    overflow: visible;
-  }
-
-  /* Force vertical stacking for all grid layouts on mobile */
-  .paper-container div[style*="grid"] {
-    grid-template-columns: 1fr !important;
-    gap: 15px !important;
-  }
-
-  .field-group {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 8px !important;
-    margin-bottom: 15px;
-  }
-
-  .field-line {
-    width: 100% !important;
-    font-size: 16px !important; 
-    margin-right: 0 !important;
-  }
-
-  /* Keep checkbox and label together */
-  .custom-checkbox {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    flex-wrap: nowrap !important;
-    width: auto !important;
-    margin-bottom: 10px !important;
-  }
-
-  .logo-script {
-    font-size: clamp(48px, 12vw, 64px) !important;
-  }
-
-  .header-title {
-    font-size: 20px !important;
-    margin-bottom: 20px !important;
-  }
-}
 @media (max-width: 768px) {
   .paper-container {
     padding: 20px 15px;
