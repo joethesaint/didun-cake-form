@@ -279,9 +279,16 @@ const OrderForm: React.FC = () => {
                 <button 
                     onClick={() => {
                         if (isFormValid) {
-                            window.print();
+                            // Small delay helps iOS Safari register the user action correctly for print
+                            setTimeout(() => {
+                                window.print();
+                            }, 200);
                         } else {
-                            alert('Please fill in the Name, Phone Number, and Delivery Date before printing.');
+                            const missing = [];
+                            if (!formData.name.trim()) missing.push('Name');
+                            if (!formData.phone.trim()) missing.push('Phone');
+                            if (!formData.deliveryDate) missing.push('Delivery Date');
+                            alert(`Missing: ${missing.join(', ')}. Please fill these to print.`);
                         }
                     }} 
                     style={{ 
