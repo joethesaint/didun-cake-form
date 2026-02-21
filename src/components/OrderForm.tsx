@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
-const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '234XXXXXXXXXX';
+// No default placeholder here to avoid the "234" error
+const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '';
 
 interface OrderFormData {
     isFirstTime: boolean | null;
@@ -84,8 +85,17 @@ const OrderForm: React.FC = () => {
         // Sanitize phone number (remove +, spaces, dashes)
         const cleanPhone = VENDOR_PHONE.replace(/\D/g, '');
         
-        if (!cleanPhone || cleanPhone.includes('X')) {
-            alert('Vendor phone number not configured. Please set VITE_VENDOR_PHONE in your environment.');
+        // WhatsApp numbers should generally be 10-15 digits
+        if (!cleanPhone || cleanPhone.length < 10) {
+            alert(
+                '❌ Vendor phone number not found or too short!\n\n' +
+                'If you are on LOCALHOST:\n' +
+                '1. Check your .env file.\n' +
+                '2. RESTART your dev server (Ctrl+C, then npm run dev).\n\n' +
+                'If you are on VERCEL:\n' +
+                '1. Add VITE_VENDOR_PHONE in Settings > Environment Variables.\n' +
+                '2. Redeploy your project.'
+            );
             return;
         }
 
