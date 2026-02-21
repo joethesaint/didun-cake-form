@@ -2,8 +2,33 @@ import React, { useState, useEffect } from 'react';
 
 const STORAGE_KEY = 'didun_order_form_data';
 
+interface OrderFormData {
+    isFirstTime: boolean | null;
+    name: string;
+    deliveryDate: string;
+    phone: string;
+    occasion: string;
+    tiers: string;
+    shape: string;
+    shapeCustom: string;
+    deliveryNeeded: boolean | null;
+    address: string;
+    cakeFlavor: string[];
+    cakeFlavorOther: string;
+    specialFlavor: string[];
+    specialFlavorOther: string;
+    filling: string[];
+    fillingOther: string;
+    decorative: string[];
+    decorativeOther: string;
+    size: string;
+    sizeOther: string;
+    specialInstructions: string;
+    date: string;
+}
+
 const OrderForm: React.FC = () => {
-    const [formData, setFormData] = useState(() => {
+    const [formData, setFormData] = useState<OrderFormData>(() => {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             try {
@@ -13,25 +38,25 @@ const OrderForm: React.FC = () => {
             }
         }
         return {
-            isFirstTime: null as boolean | null,
+            isFirstTime: null,
             name: '',
             deliveryDate: '',
             phone: '',
             occasion: '',
             tiers: '',
-            shape: '' as string,
+            shape: '',
             shapeCustom: '',
-            deliveryNeeded: null as boolean | null,
+            deliveryNeeded: null,
             address: '',
-            cakeFlavor: [] as string[],
+            cakeFlavor: [],
             cakeFlavorOther: '',
-            specialFlavor: [] as string[],
+            specialFlavor: [],
             specialFlavorOther: '',
-            filling: [] as string[],
+            filling: [],
             fillingOther: '',
-            decorative: [] as string[],
+            decorative: [],
             decorativeOther: '',
-            size: '' as string,
+            size: '',
             sizeOther: '',
             specialInstructions: '',
             date: new Date().toLocaleDateString(),
@@ -46,9 +71,9 @@ const OrderForm: React.FC = () => {
                        formData.phone.trim() !== '' && 
                        formData.deliveryDate !== '';
 
-    const toggleArray = (field: keyof typeof formData, value: string) => {
+    const toggleArray = (field: keyof OrderFormData, value: string) => {
         const current = formData[field] as string[];
-        setFormData(prev => ({
+        setFormData((prev: OrderFormData) => ({
             ...prev,
             [field]: current.includes(value)
                 ? current.filter(item => item !== value)
@@ -67,12 +92,12 @@ const OrderForm: React.FC = () => {
                 <span style={{ fontSize: '15px' }}>First time order:</span>
                 <div className="checkbox-group">
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" aria-label="First time order: Yes" checked={formData.isFirstTime === true} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
+                        <input type="checkbox" aria-label="First time order: Yes" checked={formData.isFirstTime === true} onChange={() => setFormData((p: OrderFormData) => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
                         <div className="checkmark"></div>
                         <span>Yes</span>
                     </label>
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" aria-label="First time order: No" checked={formData.isFirstTime === false} onChange={() => setFormData(p => ({ ...p, isFirstTime: p.isFirstTime === false ? null : false }))} />
+                        <input type="checkbox" aria-label="First time order: No" checked={formData.isFirstTime === false} onChange={() => setFormData((p: OrderFormData) => ({ ...p, isFirstTime: p.isFirstTime === false ? null : false }))} />
                         <div className="checkmark"></div>
                         <span>No</span>
                     </label>
@@ -81,33 +106,33 @@ const OrderForm: React.FC = () => {
 
             <div className="field-group">
                 <span>Name :</span>
-                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Customer Name" value={formData.name} onChange={e => setFormData(p => ({ ...p, name: e.target.value }))} />
+                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Customer Name" value={formData.name} onChange={e => setFormData((p: OrderFormData) => ({ ...p, name: e.target.value }))} />
             </div>
 
             <div className="responsive-grid-3" style={{ marginBottom: '12px' }}>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Delivery Date:</span>
-                    <input type="date" className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Delivery Date" value={formData.deliveryDate} onChange={e => setFormData(p => ({ ...p, deliveryDate: e.target.value }))} />
+                    <input type="date" className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Delivery Date" value={formData.deliveryDate} onChange={e => setFormData((p: OrderFormData) => ({ ...p, deliveryDate: e.target.value }))} />
                 </div>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Phone #:</span>
-                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Phone Number" value={formData.phone} onChange={e => setFormData(p => ({ ...p, phone: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Phone Number" value={formData.phone} onChange={e => setFormData((p: OrderFormData) => ({ ...p, phone: e.target.value }))} />
                 </div>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Occasion:</span>
-                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Occasion" value={formData.occasion} onChange={e => setFormData(p => ({ ...p, occasion: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Occasion" value={formData.occasion} onChange={e => setFormData((p: OrderFormData) => ({ ...p, occasion: e.target.value }))} />
                 </div>
             </div>
 
             <div className="flex-responsive" style={{ alignItems: 'flex-end', marginBottom: '12px', fontSize: '15px' }}>
                 <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Tiers requested:</span>
-                    <input className="field-line" style={{ width: '80px' }} aria-label="Tiers requested" value={formData.tiers} onChange={e => setFormData(p => ({ ...p, tiers: e.target.value }))} />
+                    <input className="field-line" style={{ width: '80px' }} aria-label="Tiers requested" value={formData.tiers} onChange={e => setFormData((p: OrderFormData) => ({ ...p, tiers: e.target.value }))} />
                 </div>
                 <div className="checkbox-group">
                     {['Round', 'Square', 'Heart', 'Sheet'].map(s => (
                         <label key={s} className="custom-checkbox" style={{ marginBottom: 0 }}>
-                            <input type="checkbox" aria-label={`Shape: ${s}`} checked={formData.shape === s} onChange={() => setFormData(p => ({ ...p, shape: p.shape === s ? '' : s }))} />
+                            <input type="checkbox" aria-label={`Shape: ${s}`} checked={formData.shape === s} onChange={() => setFormData((p: OrderFormData) => ({ ...p, shape: p.shape === s ? '' : s }))} />
                             <div className="checkmark"></div>
                             <span>{s}</span>
                         </label>
@@ -115,7 +140,7 @@ const OrderForm: React.FC = () => {
                 </div>
                 <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Custom:</span>
-                    <input className="field-line" style={{ width: '100px' }} aria-label="Custom shape" value={formData.shapeCustom} onChange={e => setFormData(p => ({ ...p, shapeCustom: e.target.value }))} />
+                    <input className="field-line" style={{ width: '100px' }} aria-label="Custom shape" value={formData.shapeCustom} onChange={e => setFormData((p: OrderFormData) => ({ ...p, shapeCustom: e.target.value }))} />
                 </div>
             </div>
 
@@ -123,19 +148,19 @@ const OrderForm: React.FC = () => {
                 <div className="checkbox-group" style={{ alignItems: 'center' }}>
                     <span>Delivery needed?</span>
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" aria-label="Delivery needed: Yes" checked={formData.deliveryNeeded === true} onChange={() => setFormData(p => ({ ...p, deliveryNeeded: p.deliveryNeeded === true ? null : true }))} />
+                        <input type="checkbox" aria-label="Delivery needed: Yes" checked={formData.deliveryNeeded === true} onChange={() => setFormData((p: OrderFormData) => ({ ...p, deliveryNeeded: p.deliveryNeeded === true ? null : true }))} />
                         <div className="checkmark"></div>
                         <span>Yes</span>
                     </label>
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" aria-label="Delivery needed: No" checked={formData.deliveryNeeded === false} onChange={() => setFormData(p => ({ ...p, deliveryNeeded: p.deliveryNeeded === false ? null : false }))} />
+                        <input type="checkbox" aria-label="Delivery needed: No" checked={formData.deliveryNeeded === false} onChange={() => setFormData((p: OrderFormData) => ({ ...p, deliveryNeeded: p.deliveryNeeded === false ? null : false }))} />
                         <div className="checkmark"></div>
                         <span>No</span>
                     </label>
                 </div>
                 <div className="field-group" style={{ marginBottom: 0, flex: 1, minWidth: '200px' }}>
                     <span style={{ whiteSpace: 'nowrap' }}>If yes, address:</span>
-                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Delivery Address" value={formData.address} onChange={e => setFormData(p => ({ ...p, address: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Delivery Address" value={formData.address} onChange={e => setFormData((p: OrderFormData) => ({ ...p, address: e.target.value }))} />
                 </div>
             </div>
 
@@ -161,7 +186,7 @@ const OrderForm: React.FC = () => {
                     ))}
                     <div className="field-group">
                         <span>Other:</span>
-                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other special flavor" value={formData.specialFlavorOther} onChange={e => setFormData(p => ({ ...p, specialFlavorOther: e.target.value }))} />
+                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other special flavor" value={formData.specialFlavorOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, specialFlavorOther: e.target.value }))} />
                     </div>
                     <p style={{ fontSize: '11px', fontStyle: 'italic', marginTop: '10px' }}>• Extra N3,000 for special flavoured cakes</p>
                 </div>
@@ -178,7 +203,7 @@ const OrderForm: React.FC = () => {
                     ))}
                     <div className="field-group">
                         <span>Other:</span>
-                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other filling" value={formData.fillingOther} onChange={e => setFormData(p => ({ ...p, fillingOther: e.target.value }))} />
+                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other filling" value={formData.fillingOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, fillingOther: e.target.value }))} />
                     </div>
                 </div>
 
@@ -195,7 +220,7 @@ const OrderForm: React.FC = () => {
                         ))}
                         <div className="field-group" style={{ marginTop: '8px', marginBottom: '5px' }}>
                             <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>Other:</span>
-                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other decorative addition" value={formData.decorativeOther} onChange={e => setFormData(p => ({ ...p, decorativeOther: e.target.value }))} />
+                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other decorative addition" value={formData.decorativeOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, decorativeOther: e.target.value }))} />
                         </div>
                     </div>
                 </div>
@@ -208,14 +233,14 @@ const OrderForm: React.FC = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px' }}>
                         {['Bento', '10"', '6"', '12"', '8"'].map(s => (
                             <label key={s} className="custom-checkbox">
-                                <input type="checkbox" aria-label={`Size: ${s}`} checked={formData.size === s} onChange={() => setFormData(p => ({ ...p, size: p.size === s ? '' : s }))} />
+                                <input type="checkbox" aria-label={`Size: ${s}`} checked={formData.size === s} onChange={() => setFormData((p: OrderFormData) => ({ ...p, size: p.size === s ? '' : s }))} />
                                 <div className="checkmark"></div>
                                 <span>{s}</span>
                             </label>
                         ))}
                         <div className="field-group" style={{ gridColumn: 'span 2' }}>
                             <span>Other:</span>
-                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other size" value={formData.sizeOther} onChange={e => setFormData(p => ({ ...p, sizeOther: e.target.value }))} />
+                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Other size" value={formData.sizeOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, sizeOther: e.target.value }))} />
                         </div>
                     </div>
                 </div>
@@ -234,7 +259,7 @@ const OrderForm: React.FC = () => {
             {/* Special Instructions */}
             <div className="field-group" style={{ marginTop: '10px' }}>
                 <span>Special Instructions :</span>
-                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Special Instructions" value={formData.specialInstructions} onChange={e => setFormData(p => ({ ...p, specialInstructions: e.target.value }))} />
+                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label="Special Instructions" value={formData.specialInstructions} onChange={e => setFormData((p: OrderFormData) => ({ ...p, specialInstructions: e.target.value }))} />
             </div>
             <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
             <div className="field-line" style={{ height: '25px', marginBottom: '8px' }}></div>
@@ -242,7 +267,7 @@ const OrderForm: React.FC = () => {
             {/* Footer Branding */}
             <div style={{ marginTop: 'auto', borderTop: '2px solid #000', paddingTop: '15px', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                 <div style={{ fontFamily: 'sans-serif', fontWeight: 'bold', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    Date: <input className="field-line" style={{ width: '250px', fontSize: '18px' }} aria-label="Order Date" value={formData.date} onChange={e => setFormData(p => ({ ...p, date: e.target.value }))} />
+                    Date: <input className="field-line" style={{ width: '250px', fontSize: '18px' }} aria-label="Order Date" value={formData.date} onChange={e => setFormData((p: OrderFormData) => ({ ...p, date: e.target.value }))} />
                 </div>
             </div>
 
@@ -308,7 +333,7 @@ const OrderForm: React.FC = () => {
                     Print / Export PDF
                 </button>
                 <button 
-                    onClick={() => { if(confirm('Clear all form data?')) { setFormData({ ...formData, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' }); localStorage.removeItem(STORAGE_KEY); } }}
+                    onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
                     style={{ 
                         flex: 1,
                         padding: '12px 10px', 
