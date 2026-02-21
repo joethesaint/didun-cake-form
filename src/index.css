@@ -148,16 +148,15 @@ body {
     margin: 0 !important;
     box-shadow: none !important;
     width: 1050px !important;
-    height: 1485px !important;
-    padding: 25px 45px !important;
+    height: 1380px !important;
+    padding: 30px 45px !important;
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     background-color: white !important;
     overflow: hidden !important;
-    
-    -webkit-transform: scale(0.70) !important;
-    transform: scale(0.70) !important; 
+    -webkit-transform: scale(0.72) !important;
+    transform: scale(0.72) !important; 
     -webkit-transform-origin: top left !important;
     transform-origin: top left !important;
     border: none !important;
@@ -173,20 +172,19 @@ body {
   .field-group {
     display: flex !important;
     flex-direction: row !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 10px !important;
   }
 
   .logo-script {
-    font-size: 65px !important;
+    font-size: 70px !important;
     margin-bottom: 5px !important;
   }
 
   .header-title {
-    font-size: 26px !important;
-    margin-bottom: 15px !important;
+    font-size: 28px !important;
+    margin-bottom: 20px !important;
   }
 }
-
 
 .logo-script {
   font-family: var(--font-script);
