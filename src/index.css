@@ -128,7 +128,7 @@ body {
 
 @media print {
   @page {
-    /* Set a height much larger than the content to prevent auto-breaks */
+    /* Very tall page to force single sheet */
     size: 210mm 500mm; 
     margin: 0;
   }
@@ -147,25 +147,25 @@ body {
   .paper-container {
     margin: 0 !important;
     box-shadow: none !important;
-    width: 210mm !important;
+    width: 210mm !important; /* Fill A4 width exactly */
     height: auto !important;
     min-height: 297mm !important;
-    padding: 15mm 20mm !important;
+    padding: 15mm 20mm !important; /* Content margins */
     position: relative !important;
-    overflow: visible !important;
     display: block !important;
+    border: none !important;
+    background-color: white !important;
     
-    /* Prevent content from splitting */
+    /* Prevent splitting */
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    border: none !important;
   }
 
   .no-print, .footer-handle {
     display: none !important;
   }
 
-  /* Force internal layout consistency */
+  /* Ensure rows stay rows */
   .responsive-grid-3 {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
