@@ -89,8 +89,12 @@ const OrderForm: React.FC = () => {
                 useCORS: true,
                 pixelRatio: 2,
                 backgroundColor: '#ffffff',
+                width: 1080, // Force desktop width for capture
                 style: {
                     margin: '0',
+                    width: '1080px', // Apply desktop width to the style
+                    minWidth: '1080px', // Ensure it doesn't shrink during capture
+                    transform: 'none', // Reset any mobile transforms
                 }
             });
             

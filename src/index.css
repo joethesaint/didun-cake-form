@@ -25,21 +25,6 @@ body {
   line-height: 1.4;
 }
 
-.paper-container {
-  background-color: var(--bg-color);
-  width: min(1080px, 95vw);
-  min-height: auto;
-  margin: 20px auto;
-  padding: 30px 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-
 .responsive-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -76,19 +61,27 @@ body {
   z-index: 100;
 }
 
-@media (max-width: 768px) {
-  body {
-    padding-bottom: 180px; /* Space for the fixed footer */
-  }
+.paper-container {
+  container-type: inline-size;
+  container-name: form;
+  background-color: var(--bg-color);
+  width: min(1080px, 95vw);
+  min-height: auto;
+  margin: 20px auto;
+  padding: 30px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
 
+/* Use Container Queries instead of Media Queries for internal layout */
+@container form (max-width: 768px) {
   .paper-container {
     padding: 20px 15px;
-    width: 100% !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    margin-bottom: 20px !important;
-    overflow: visible !important;
   }
 
   .responsive-grid-3, 
@@ -108,7 +101,14 @@ body {
     width: 100% !important;
     font-size: 16px !important;
   }
+}
 
+/* Maintain Viewport Queries ONLY for the fixed UI elements and body padding */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 180px;
+  }
+  
   .no-print {
     position: fixed !important;
     bottom: 0 !important;
