@@ -79,12 +79,18 @@ body {
 }
 
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 180px; /* Space for the fixed footer */
+  }
+
   .paper-container {
     padding: 20px 15px;
     width: 100% !important;
     margin: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
+    margin-bottom: 20px !important;
+    overflow: visible !important;
   }
 
   .responsive-grid-3, 
@@ -110,11 +116,12 @@ body {
     left: 0 !important;
     right: 0 !important;
     background: rgba(255, 255, 255, 0.98) !important;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    padding: 15px 20px !important;
-    padding-bottom: calc(15px + env(safe-area-inset-bottom)) !important;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.12) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px !important;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.08) !important;
+    border-top: 1px solid rgba(0,0,0,0.05) !important;
     margin: 0 !important;
     z-index: 9999 !important;
   }
@@ -199,6 +206,72 @@ body {
   .header-title {
     font-size: 28px !important;
     margin-bottom: 25px !important;
+  }
+}
+
+.action-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  max-width: 400px;
+}
+
+.btn-primary {
+  flex: 1 1 100%;
+  padding: 14px 20px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 16px;
+  transition: opacity 0.2s;
+}
+
+.btn-primary.btn-disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  flex: 1;
+  padding: 12px 10px;
+  background: white;
+  color: #333;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.btn-tertiary {
+  flex: 1;
+  padding: 12px 10px;
+  background: white;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .btn-primary {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+
+  .btn-secondary, .btn-tertiary {
+    padding: 10px 8px;
+    font-size: 12px;
   }
 }
 

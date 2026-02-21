@@ -337,74 +337,23 @@ const OrderForm: React.FC = () => {
                     maxWidth: '300px',
                     marginBottom: '5px'
                 }}>
-                    ⚠️ Fill Name, Phone & Date to Print
+                    ⚠️ Fill Name, Phone & Date to Download
                 </span>
             )}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', width: '100%', justifyContent: 'center', maxWidth: '400px' }}>
+            <div className="action-buttons-container">
                 <button 
                     onClick={exportImage}
                     disabled={isExporting}
-                    style={{ 
-                        flex: '1 1 100%',
-                        padding: '14px 20px', 
-                        background: isFormValid ? 'black' : '#ccc', 
-                        color: 'white', 
-                        border: 'none', 
-                        borderRadius: '4px', 
-                        cursor: isExporting ? 'wait' : 'pointer', 
-                        fontFamily: 'var(--font-sans)', 
-                        fontWeight: 700,
-                        fontSize: '16px',
-                        transition: 'opacity 0.2s',
-                        opacity: isExporting ? 0.7 : 1
-                    }}
+                    className={`btn-primary ${!isFormValid ? 'btn-disabled' : ''}`}
+                    style={{ opacity: isExporting ? 0.7 : 1 }}
                 >
-                    {isExporting ? 'Generating Image...' : 'Save as Image (PNG)'}
-                </button>
-                
-                <button 
-                    onClick={() => {
-                        if (isFormValid) {
-                            setTimeout(() => {
-                                window.print();
-                            }, 200);
-                        } else {
-                            const missing = [];
-                            if (!formData.name.trim()) missing.push('Name');
-                            if (!formData.phone.trim()) missing.push('Phone');
-                            if (!formData.deliveryDate) missing.push('Delivery Date');
-                            alert(`Missing: ${missing.join(', ')}. Please fill these to print.`);
-                        }
-                    }} 
-                    style={{ 
-                        flex: 1,
-                        padding: '12px 10px', 
-                        background: 'white', 
-                        color: '#333', 
-                        border: '1px solid #333', 
-                        borderRadius: '4px', 
-                        cursor: 'pointer', 
-                        fontFamily: 'var(--font-sans)', 
-                        fontWeight: 500,
-                        fontSize: '13px'
-                    }}
-                >
-                    Print Option
+                    {isExporting ? 'Generating Summary...' : 'Download Order Summary'}
                 </button>
                 
                 <button 
                     onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
-                    style={{ 
-                        flex: 1,
-                        padding: '12px 10px', 
-                        background: 'white', 
-                        color: '#666', 
-                        border: '1px solid #ccc', 
-                        borderRadius: '4px', 
-                        cursor: 'pointer', 
-                        fontSize: '13px',
-                        fontWeight: 500
-                    }}
+                    className="btn-tertiary"
+                    style={{ flex: '1 1 100%', marginTop: '5px' }}
                 >
                     Clear Form
                 </button>
