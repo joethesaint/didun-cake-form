@@ -105,6 +105,7 @@ body {
     width: 100% !important;
   }
 
+  /* Prevent iOS auto-zoom on focus by using 16px font */
   .field-line {
     width: 100% !important;
     font-size: 16px !important;

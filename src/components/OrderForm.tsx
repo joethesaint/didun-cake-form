@@ -86,6 +86,7 @@ const OrderForm: React.FC = () => {
         try {
             const dataUrl = await toPng(formRef.current, { 
                 cacheBust: true,
+                useCORS: true,
                 pixelRatio: 2,
                 backgroundColor: '#ffffff',
                 style: {
