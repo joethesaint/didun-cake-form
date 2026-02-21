@@ -68,6 +68,19 @@ body {
   align-items: center;
 }
 
+.no-print {
+  position: sticky;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  z-index: 100;
+}
+
 @media (max-width: 768px) {
   .paper-container {
     padding: 20px 15px;
@@ -108,7 +121,7 @@ body {
   }
 
   .no-print {
-    position: fixed !important; /* Fixed is more reliable on iOS */
+    position: fixed !important;
     bottom: 0;
     left: 0;
     right: 0;
@@ -122,14 +135,14 @@ body {
     align-items: center;
     gap: 10px;
     width: 100%;
-    z-index: 9999; /* Ensure it stays on top */
+    z-index: 9999;
   }
 
   .no-print button {
     width: 100%;
     max-width: 320px;
     cursor: pointer;
-    touch-action: manipulation; /* Improves tap response time */
+    touch-action: manipulation;
   }
 }
 
