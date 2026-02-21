@@ -91,7 +91,8 @@ const OrderForm: React.FC = () => {
                 pixelRatio: 2.5, 
                 backgroundColor: '#ffffff',
                 width: 1080,
-                // Ensure all styles are processed once before capture for speed
+                useCORS: true, // Crucial for external fonts
+                cacheBust: true,
                 style: {
                     opacity: '1',
                 }
