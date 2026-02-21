@@ -4,6 +4,7 @@ import { toPng } from 'html-to-image';
 const STORAGE_KEY = 'didun_order_form_data';
 // No default placeholder here to avoid the "234" error
 const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '';
+const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || '';
 
 interface OrderFormData {
     isFirstTime: boolean | null;
@@ -83,6 +84,61 @@ const OrderForm: React.FC = () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
 
+    const saveToGoogleSheets = async () => {
+        if (!GOOGLE_SHEETS_URL) {
+            console.warn("Google Sheets URL not provided. Skipping background sync.");
+            return;
+        }
+
+        try {
+            // Flatten arrays for cleaner spreadsheet columns
+            const payload = {
+                ...formData,
+                timestamp: new Date().toISOString(),
+                cakeFlavor: formData.cakeFlavor.join(', '),
+                specialFlavor: formData.specialFlavor.join(', '),
+                filling: formData.filling.join(', '),
+                decorative: formData.decorative.join(', '),
+                shape: formData.shape || formData.shapeCustom,
+                size: formData.size || formData.sizeOther
+            };
+
+            // Use 'no-cors' for Google Apps Script to avoid preflight issues 
+            // since we don't need a response
+            fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).catch(e => console.error("Async Sheets sync failed:", e));
+
+            // We don't await this fetch because we want "silent background execution"
+            // as requested by the user.
+        } catch (err) {
+            console.error('Error initiating Sheets sync:', err);
+        }
+    };
+
+    const handleSubmit = async () => {
+        if (!isFormValid || busy) return;
+
+        setBusy(true);
+        setStatusText('Syncing...');
+        
+        // 1. Silent Background Execution (Google Sheets)
+        saveToGoogleSheets();
+        
+        // 2. Immediate Hand-off to WhatsApp
+        setTimeout(() => {
+            setStatusText('Opening WhatsApp...');
+            sendToWhatsApp();
+            setBusy(false);
+            setStatusText('');
+        }, 800);
+    };
+
     const sendToWhatsApp = () => {
         if (!isFormValid) {
             const missing = [];
@@ -133,18 +189,12 @@ const OrderForm: React.FC = () => {
     };
 
     const exportImage = async () => {
-        if (!isFormValid) {
-            const missing = [];
-            if (!formData.name.trim()) missing.push('Name');
-            if (!formData.phone.trim()) missing.push('Phone');
-            if (!formData.deliveryDate) missing.push('Delivery Date');
-            alert(`Missing: ${missing.join(', ')}. Please fill these to export.`);
-            return;
-        }
+        if (!isFormValid || busy) return;
 
         if (formRef.current === null) return;
         
-        setIsExporting(true);
+        setBusy(true);
+        setStatusText('Generating...');
         try {
             // Using a slightly higher scale for better quality (2x standard resolution)
             const dataUrl = await toPng(formRef.current, { 
@@ -168,6 +218,8 @@ const OrderForm: React.FC = () => {
                             title: 'Cake Order Summary',
                             text: `New order from ${formData.name}`
                         });
+                        setBusy(false);
+                        setStatusText('');
                         return; // Successfully shared
                     } catch (shareError) {
                         // User cancelled or share failed, fallback to download
@@ -185,7 +237,8 @@ const OrderForm: React.FC = () => {
             console.error('oops, something went wrong!', err);
             alert('Failed to generate image. Please try again.');
         } finally {
-            setIsExporting(false);
+            setBusy(false);
+            setStatusText('');
         }
     };
 
