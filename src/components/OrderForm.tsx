@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 
 const STORAGE_KEY = 'didun_order_form_data';
-const VENDOR_PHONE = '2348000000000'; // Replace with the actual vendor number
+const VENDOR_PHONE = import.meta.env.VITE_VENDOR_PHONE || '234XXXXXXXXXX';
 
 interface OrderFormData {
     isFirstTime: boolean | null;
