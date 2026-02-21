@@ -87,14 +87,14 @@ const OrderForm: React.FC = () => {
             const dataUrl = await toPng(formRef.current, { 
                 cacheBust: true,
                 useCORS: true,
-                pixelRatio: 2,
+                pixelRatio: 3, // Ultra-sharp quality
                 backgroundColor: '#ffffff',
-                width: 1080, // Force desktop width for capture
+                width: 1080,
                 style: {
                     margin: '0',
-                    width: '1080px', // Apply desktop width to the style
-                    minWidth: '1080px', // Ensure it doesn't shrink during capture
-                    transform: 'none', // Reset any mobile transforms
+                    width: '1080px',
+                    minWidth: '1080px',
+                    transform: 'none',
                 }
             });
             
@@ -144,8 +144,9 @@ const OrderForm: React.FC = () => {
 
     return (
     <>
-        <div ref={formRef} className="paper-container">
-            <div className="logo-script">Dídùn</div>
+        <div className="capture-anchor">
+            <div ref={formRef} className="paper-container">
+                <div className="logo-script">Dídùn</div>
             <div className="header-title">CAKE ORDER FORM</div>
 
             {/* Header Fields */}
@@ -334,6 +335,7 @@ const OrderForm: React.FC = () => {
           .no-print { display: none !important; }
         }
       `}</style>
+            </div>
         </div>
 
         <div className="no-print">
