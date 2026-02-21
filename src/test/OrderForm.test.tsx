@@ -21,7 +21,7 @@ describe('OrderForm', () => {
         
         // Initially disabled
         expect(printBtn).toBeDisabled();
-        expect(screen.getByText(/Please fill Name, Phone, and Delivery Date/i)).toBeInTheDocument();
+        expect(screen.getByText(/Fill Name, Phone & Date to Print/i)).toBeInTheDocument();
 
         // Fill fields
         fireEvent.change(screen.getByLabelText(/Customer Name/i), { target: { value: 'John Doe' } });
@@ -30,7 +30,7 @@ describe('OrderForm', () => {
 
         // Should be enabled now
         expect(printBtn).toBeEnabled();
-        expect(screen.queryByText(/Please fill Name, Phone, and Delivery Date/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Fill Name, Phone & Date to Print/i)).not.toBeInTheDocument();
     });
 
     it('toggles cake flavors correctly', () => {
@@ -53,7 +53,7 @@ describe('OrderForm', () => {
         expect(savedData.name).toBe('Jane Smith');
     });
 
-    it('clears the form on clicking Clear Form', () => {
+    it('clears the form on clicking Clear', () => {
         // Mock confirm
         window.confirm = vi.fn(() => true);
         
@@ -61,11 +61,25 @@ describe('OrderForm', () => {
         const nameInput = screen.getByLabelText(/Customer Name/i);
         fireEvent.change(nameInput, { target: { value: 'Jane Smith' } });
         
-        const clearBtn = screen.getByRole('button', { name: /Clear Form/i });
+        const clearBtn = screen.getByRole('button', { name: /Clear/i });
         fireEvent.click(clearBtn);
 
         expect(nameInput).toHaveValue('');
         const savedData = JSON.parse(localStorage.getItem('didun_order_form_data') || '{}');
         expect(savedData.name).toBe('');
+    });
+
+    it('calls window.print when the print button is clicked', () => {
+        render(<OrderForm />);
+        
+        // Fill required fields
+        fireEvent.change(screen.getByLabelText(/Customer Name/i), { target: { value: 'John Doe' } });
+        fireEvent.change(screen.getByLabelText(/Phone Number/i), { target: { value: '123456789' } });
+        fireEvent.change(screen.getByLabelText(/Delivery Date/i), { target: { value: '2026-12-25' } });
+
+        const printBtn = screen.getByRole('button', { name: /Print \/ Export PDF/i });
+        fireEvent.click(printBtn);
+
+        expect(window.print).toHaveBeenCalled();
     });
 });
