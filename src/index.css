@@ -128,15 +128,16 @@ body {
 
 @media print {
   @page {
-    /* Tall page format prevents automatic breaks while keeping it 1 sheet */
-    size: 210mm 500mm; 
+    /* Hard-lock to A4 dimensions */
+    size: A4 portrait;
     margin: 0;
   }
 
   html, body {
     width: 210mm !important;
-    height: auto !important;
-    overflow: visible !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important; /* The 'Lock' that prevents 2nd page */
     margin: 0 !important;
     padding: 0 !important;
     background-color: white !important;
@@ -147,22 +148,27 @@ body {
   .paper-container {
     margin: 0 !important;
     box-shadow: none !important;
-    width: 210mm !important; /* Exactly match A4 width */
-    height: auto !important; /* Allow height to grow to prevent cropping */
-    min-height: 297mm !important;
-    padding: 12mm 15mm !important; /* Slightly tighter padding to fit better */
-    position: relative !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    padding: 12mm 15mm !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    background-color: white !important;
+    overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
-    overflow: visible !important;
     border: none !important;
-    background-color: white !important;
     
-    /* Avoid scaling that causes gaps, use natural layout */
-    transform: none !important;
-    -webkit-transform: none !important;
+    /* SAFETY SCALE: This ensures that even if browser rounding adds a pixel, 
+       it stays within the physical A4 bounds. */
+    -webkit-transform: scale(0.98) !important;
+    transform: scale(0.98) !important; 
+    -webkit-transform-origin: top left !important;
+    transform-origin: top left !important;
     
-    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
     break-inside: avoid !important;
   }
 
