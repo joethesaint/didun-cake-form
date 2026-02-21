@@ -66,10 +66,7 @@ const OrderForm: React.FC = () => {
     });
 
     useEffect(() => {
-        const handler = setTimeout(() => {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-        }, 500);
-        return () => clearTimeout(handler);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
     }, [formData]);
 
     const exportImage = async () => {

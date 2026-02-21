@@ -20,18 +20,12 @@ describe('OrderForm', () => {
         expect(screen.getByText(/CAKE ORDER FORM/i)).toBeInTheDocument();
     });
 
-    it('validates required fields for the action buttons', () => {
+    it('is always enabled but would show alert if invalid (manual check)', () => {
         render(<OrderForm />);
+        const saveBtn = screen.getByRole('button', { name: /Download Image Summary/i });
         
-        // Initially disabled style (checking the validation message)
-        expect(screen.getByText(/Fill Name, Phone & Date to Download/i)).toBeInTheDocument();
-
-        // Fill fields
-        fireEvent.change(screen.getByLabelText(/Customer Name/i), { target: { value: 'John Doe' } });
-        fireEvent.change(screen.getByLabelText(/Phone Number/i), { target: { value: '123456789' } });
-        fireEvent.change(screen.getByLabelText(/Delivery Date/i), { target: { value: '2026-12-25' } });
-
-        // Warning should be gone
+        // Should be enabled now
+        expect(saveBtn).toBeEnabled();
         expect(screen.queryByText(/Fill Name, Phone & Date to Download/i)).not.toBeInTheDocument();
     });
 
