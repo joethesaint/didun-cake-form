@@ -17,7 +17,8 @@ describe('OrderForm', () => {
 
     it('renders the form title', () => {
         render(<OrderForm />);
-        expect(screen.getByText(/CAKE ORDER FORM/i)).toBeInTheDocument();
+        // The hidden print copy is aria-hidden, so only the visible heading counts.
+        expect(screen.getByRole('heading', { name: /CAKE ORDER FORM/i })).toBeInTheDocument();
     });
 
     it('is always enabled but would show alert if invalid (manual check)', () => {
