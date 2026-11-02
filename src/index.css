@@ -169,7 +169,8 @@ body {
 }
 
 @media (max-width: 768px) {
-  body {
+  /* room for the fixed action bar, only on the order form */
+  body:has(.no-print) {
     padding-bottom: 180px;
   }
   

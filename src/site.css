@@ -1,0 +1,203 @@
+/* Website pages. Reuses the order form's look (index.css): white paper, black lines,
+   Pacifico logo, Playfair headings, Inter body. Only what the form doesn't have lives here. */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.site a {
+  color: inherit;
+}
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1px solid #000;
+}
+
+.site-nav-logo {
+  font-family: var(--font-script);
+  font-size: 26px;
+  text-decoration: none;
+}
+
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.site-nav-links a {
+  text-decoration: none;
+}
+
+.site-nav-links a:hover {
+  text-decoration: underline;
+}
+
+.site-nav-cta {
+  border: 1px solid #000;
+  padding: 6px 14px;
+}
+
+.site-nav-cta:hover {
+  background: #000;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+.site-paper {
+  padding: 50px 60px;
+}
+
+.site-hero {
+  text-align: center;
+  padding-bottom: 40px;
+  border-bottom: 2px solid #000;
+}
+
+.site-hero .header-title {
+  margin-bottom: 20px;
+}
+
+.site-lede {
+  max-width: 520px;
+  margin: 0 auto 28px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.site-btn {
+  display: inline-block;
+  flex: none;
+  text-decoration: none;
+  color: #fff !important;
+  padding: 14px 36px;
+}
+
+.site-btn:hover {
+  opacity: 0.85;
+}
+
+.site-section {
+  padding-top: 40px;
+}
+
+.site-heading {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.site-row {
+  margin-top: 15px;
+}
+
+.site-list {
+  list-style: none;
+  font-size: 14px;
+  line-height: 2;
+  text-align: center;
+}
+
+.site-steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.site-steps li {
+  border: 1px solid #000;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  font-size: 14px;
+}
+
+.site-steps p {
+  margin-top: 4px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.site-step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-weight: 700;
+}
+
+.site-cta-row {
+  text-align: center;
+  padding: 40px 0 10px;
+}
+
+.site-footer {
+  border-top: 2px solid #000;
+  margin-top: 30px;
+}
+
+.site-footer a {
+  text-decoration: none;
+}
+
+.back-link {
+  flex: 1 1 100%;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  text-decoration: none;
+  padding: 6px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+@container (max-width: 768px) {
+  .site-paper {
+    padding: 30px 18px;
+  }
+
+  .site-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-nav {
+    padding: 10px 16px;
+  }
+
+  .site-nav-links {
+    gap: 14px;
+    font-size: 13px;
+  }
+
+  .site-paper {
+    padding: 30px 18px;
+  }
+
+  .site-steps {
+    grid-template-columns: 1fr;
+  }
+}

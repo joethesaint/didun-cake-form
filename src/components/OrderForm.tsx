@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { SHAPES, CAKE_FLAVORS, SPECIAL_FLAVORS, FILLINGS, DECORATIVE, NOTES, INSTAGRAM_URL, INSTAGRAM_HANDLE } from '../data/menu';
 
 const STORAGE_KEY = 'didun_order_form_data';
 
@@ -91,7 +92,6 @@ const OrderForm: React.FC = () => {
                 pixelRatio: 2.5, 
                 backgroundColor: '#ffffff',
                 width: 1080,
-                useCORS: true, // Crucial for external fonts
                 cacheBust: true,
                 style: {
                     opacity: '1',
@@ -189,7 +189,7 @@ const OrderForm: React.FC = () => {
                     <input className="field-line" style={{ width: '80px' }} value={formData.tiers} onChange={e => setFormData((p: any) => ({ ...p, tiers: e.target.value }))} />
                 </div>
                 <div className="checkbox-group">
-                    {['Round', 'Square', 'Heart', 'Sheet'].map(s => (
+                    {SHAPES.map(s => (
                         <label key={s} className="custom-checkbox" style={{ marginBottom: 0 }}>
                             <input type="checkbox" checked={formData.shape === s} onChange={() => setFormData((p: any) => ({ ...p, shape: p.shape === s ? '' : s }))} />
                             <div className="checkmark"></div>
@@ -226,7 +226,7 @@ const OrderForm: React.FC = () => {
             <div className="responsive-grid-3" style={{ marginBottom: '25px' }}>
                 <div className="section-box">
                     <div className="section-title">Cake Flavor</div>
-                    {['Vanilla', 'Chocolate', 'Red Velvet'].map(f => (
+                    {CAKE_FLAVORS.map(f => (
                         <label key={f} className="custom-checkbox">
                             <input type="checkbox" checked={formData.cakeFlavor.includes(f)} onChange={() => toggleArray('cakeFlavor', f)} />
                             <div className="checkmark"></div>
@@ -234,7 +234,7 @@ const OrderForm: React.FC = () => {
                         </label>
                     ))}
                     <div className="sub-header">Special Flavor</div>
-                    {['Cookies and cream', 'Carrot', 'Coconut'].map(f => (
+                    {SPECIAL_FLAVORS.map(f => (
                         <label key={f} className="custom-checkbox">
                             <input type="checkbox" checked={formData.specialFlavor.includes(f)} onChange={() => toggleArray('specialFlavor', f)} />
                             <div className="checkmark"></div>
@@ -249,7 +249,7 @@ const OrderForm: React.FC = () => {
 
                 <div className="section-box">
                     <div className="section-title">Filling</div>
-                    {['Vanilla', 'Salted caramel', 'Raspberry', 'Strawberry', 'Crunchy peanut', 'Chocolate', 'Buttercream'].map(f => (
+                    {FILLINGS.map(f => (
                         <label key={f} className="custom-checkbox">
                             <input type="checkbox" checked={formData.filling.includes(f)} onChange={() => toggleArray('filling', f)} />
                             <div className="checkmark"></div>
@@ -265,7 +265,7 @@ const OrderForm: React.FC = () => {
                 <div className="section-box">
                     <div className="section-title">Decorative additions</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                        {['Chocchip', 'White chip', 'Almonds', 'Coconut flakes', 'Oreo', 'M&M', 'Topper', 'Full glitter', 'Ribbon'].map(f => (
+                        {DECORATIVE.map(f => (
                             <label key={f} className="custom-checkbox" style={{ marginBottom: '3px' }}>
                                 <input type="checkbox" checked={formData.decorative.includes(f)} onChange={() => toggleArray('decorative', f)} />
                                 <div className="checkmark"></div>
@@ -301,10 +301,7 @@ const OrderForm: React.FC = () => {
                 <div className="section-box">
                     <div className="section-title">PLEASE NOTE</div>
                     <ul className="note-list">
-                        <li>For whipped cream there will be an additional cost of N5,000.</li>
-                        <li>Customizable toppers come at an extra fee.</li>
-                        <li>Any other special requests attract extra cost.</li>
-                        <li>Please indicate if you have allergies or you'll prefer reduced sugar.</li>
+                        {NOTES.map(n => <li key={n}>{n}</li>)}
                     </ul>
                 </div>
             </div>
@@ -321,8 +318,8 @@ const OrderForm: React.FC = () => {
             </div>
 
             <div className="footer-handle">
-                <a href="https://www.instagram.com/didun_ng/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
-                    @didun_ng
+                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {INSTAGRAM_HANDLE}
                 </a>
             </div>
         </div>
@@ -344,6 +341,7 @@ const OrderForm: React.FC = () => {
 
         <div className="no-print">
             <div className="action-buttons-container">
+                <a href="#/" className="back-link">&larr; Back to the website</a>
                 <button 
                     onClick={exportImage}
                     disabled={isExporting}
