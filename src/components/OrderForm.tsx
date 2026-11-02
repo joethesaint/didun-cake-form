@@ -142,21 +142,21 @@ const OrderForm: React.FC = () => {
         }));
     };
 
-    const FormContent = ({ isPrint = false }) => (
+    const renderForm = (isPrint: boolean) => (
         <div className="paper-container">
             <div className="logo-script">Dídùn</div>
-            <div className="header-title">CAKE ORDER FORM</div>
+            <h1 className="header-title">CAKE ORDER FORM</h1>
 
             <div className="flex-responsive" style={{ gap: '25px', alignItems: 'center', marginBottom: '15px' }}>
                 <span style={{ fontSize: '15px' }}>First time order:</span>
                 <div className="checkbox-group">
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" checked={formData.isFirstTime === true} onChange={() => setFormData((p: any) => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
+                        <input type="checkbox" checked={formData.isFirstTime === true} onChange={() => setFormData((p: OrderFormData) => ({ ...p, isFirstTime: p.isFirstTime === true ? null : true }))} />
                         <div className="checkmark"></div>
                         <span>Yes</span>
                     </label>
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" checked={formData.isFirstTime === false} onChange={() => setFormData((p: any) => ({ ...p, isFirstTime: p.isFirstTime === false ? null : false }))} />
+                        <input type="checkbox" checked={formData.isFirstTime === false} onChange={() => setFormData((p: OrderFormData) => ({ ...p, isFirstTime: p.isFirstTime === false ? null : false }))} />
                         <div className="checkmark"></div>
                         <span>No</span>
                     </label>
@@ -165,33 +165,33 @@ const OrderForm: React.FC = () => {
 
             <div className="field-group">
                 <span>Name :</span>
-                <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.name} onChange={e => setFormData((p: any) => ({ ...p, name: e.target.value }))} />
+                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Customer Name'} value={formData.name} onChange={e => setFormData((p: OrderFormData) => ({ ...p, name: e.target.value }))} />
             </div>
 
             <div className="responsive-grid-3" style={{ marginBottom: '12px' }}>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Delivery Date:</span>
-                    <input type={isPrint ? 'text' : 'date'} className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.deliveryDate} onChange={e => setFormData((p: any) => ({ ...p, deliveryDate: e.target.value }))} />
+                    <input type={isPrint ? 'text' : 'date'} className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Delivery Date'} value={formData.deliveryDate} onChange={e => setFormData((p: OrderFormData) => ({ ...p, deliveryDate: e.target.value }))} />
                 </div>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Phone #:</span>
-                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.phone} onChange={e => setFormData((p: any) => ({ ...p, phone: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Phone'} value={formData.phone} onChange={e => setFormData((p: OrderFormData) => ({ ...p, phone: e.target.value }))} />
                 </div>
                 <div className="field-group">
                     <span style={{ whiteSpace: 'nowrap' }}>Occasion:</span>
-                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.occasion} onChange={e => setFormData((p: any) => ({ ...p, occasion: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Occasion'} value={formData.occasion} onChange={e => setFormData((p: OrderFormData) => ({ ...p, occasion: e.target.value }))} />
                 </div>
             </div>
 
             <div className="flex-responsive" style={{ alignItems: 'flex-end', marginBottom: '12px', fontSize: '15px' }}>
                 <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Tiers requested:</span>
-                    <input className="field-line" style={{ width: '80px' }} value={formData.tiers} onChange={e => setFormData((p: any) => ({ ...p, tiers: e.target.value }))} />
+                    <input className="field-line" style={{ width: '80px' }} aria-label={isPrint ? undefined : 'Tiers requested'} value={formData.tiers} onChange={e => setFormData((p: OrderFormData) => ({ ...p, tiers: e.target.value }))} />
                 </div>
                 <div className="checkbox-group">
                     {SHAPES.map(s => (
                         <label key={s} className="custom-checkbox" style={{ marginBottom: 0 }}>
-                            <input type="checkbox" checked={formData.shape === s} onChange={() => setFormData((p: any) => ({ ...p, shape: p.shape === s ? '' : s }))} />
+                            <input type="checkbox" aria-label={isPrint ? undefined : `Shape: ${s}`} checked={formData.shape === s} onChange={() => setFormData((p: OrderFormData) => ({ ...p, shape: p.shape === s ? '' : s }))} />
                             <div className="checkmark"></div>
                             <span>{s}</span>
                         </label>
@@ -199,7 +199,7 @@ const OrderForm: React.FC = () => {
                 </div>
                 <div className="field-group" style={{ marginBottom: 0 }}>
                     <span>Custom:</span>
-                    <input className="field-line" style={{ width: '100px' }} value={formData.shapeCustom} onChange={e => setFormData((p: any) => ({ ...p, shapeCustom: e.target.value }))} />
+                    <input className="field-line" style={{ width: '100px' }} aria-label={isPrint ? undefined : 'Custom shape'} value={formData.shapeCustom} onChange={e => setFormData((p: OrderFormData) => ({ ...p, shapeCustom: e.target.value }))} />
                 </div>
             </div>
 
@@ -207,19 +207,19 @@ const OrderForm: React.FC = () => {
                 <div className="checkbox-group" style={{ alignItems: 'center' }}>
                     <span>Delivery needed?</span>
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" checked={formData.deliveryNeeded === true} onChange={() => setFormData((p: any) => ({ ...p, deliveryNeeded: p.deliveryNeeded === true ? null : true }))} />
+                        <input type="checkbox" checked={formData.deliveryNeeded === true} onChange={() => setFormData((p: OrderFormData) => ({ ...p, deliveryNeeded: p.deliveryNeeded === true ? null : true }))} />
                         <div className="checkmark"></div>
                         <span>Yes</span>
                     </label>
                     <label className="custom-checkbox" style={{ marginBottom: 0 }}>
-                        <input type="checkbox" checked={formData.deliveryNeeded === false} onChange={() => setFormData((p: any) => ({ ...p, deliveryNeeded: p.deliveryNeeded === false ? null : false }))} />
+                        <input type="checkbox" checked={formData.deliveryNeeded === false} onChange={() => setFormData((p: OrderFormData) => ({ ...p, deliveryNeeded: p.deliveryNeeded === false ? null : false }))} />
                         <div className="checkmark"></div>
                         <span>No</span>
                     </label>
                 </div>
                 <div className="field-group" style={{ marginBottom: 0, flex: 1, minWidth: '200px' }}>
                     <span style={{ whiteSpace: 'nowrap' }}>If yes, address:</span>
-                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.address} onChange={e => setFormData((p: any) => ({ ...p, address: e.target.value }))} />
+                    <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Delivery address'} value={formData.address} onChange={e => setFormData((p: OrderFormData) => ({ ...p, address: e.target.value }))} />
                 </div>
             </div>
 
@@ -228,7 +228,7 @@ const OrderForm: React.FC = () => {
                     <div className="section-title">Cake Flavor</div>
                     {CAKE_FLAVORS.map(f => (
                         <label key={f} className="custom-checkbox">
-                            <input type="checkbox" checked={formData.cakeFlavor.includes(f)} onChange={() => toggleArray('cakeFlavor', f)} />
+                            <input type="checkbox" aria-label={isPrint ? undefined : `Cake Flavor: ${f}`} checked={formData.cakeFlavor.includes(f)} onChange={() => toggleArray('cakeFlavor', f)} />
                             <div className="checkmark"></div>
                             <span>{f}</span>
                         </label>
@@ -236,14 +236,14 @@ const OrderForm: React.FC = () => {
                     <div className="sub-header">Special Flavor</div>
                     {SPECIAL_FLAVORS.map(f => (
                         <label key={f} className="custom-checkbox">
-                            <input type="checkbox" checked={formData.specialFlavor.includes(f)} onChange={() => toggleArray('specialFlavor', f)} />
+                            <input type="checkbox" aria-label={isPrint ? undefined : `Special Flavor: ${f}`} checked={formData.specialFlavor.includes(f)} onChange={() => toggleArray('specialFlavor', f)} />
                             <div className="checkmark"></div>
                             <span>{f}</span>
                         </label>
                     ))}
                     <div className="field-group">
                         <span>Other:</span>
-                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.specialFlavorOther} onChange={e => setFormData((p: any) => ({ ...p, specialFlavorOther: e.target.value }))} />
+                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Other special flavor'} value={formData.specialFlavorOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, specialFlavorOther: e.target.value }))} />
                     </div>
                 </div>
 
@@ -251,14 +251,14 @@ const OrderForm: React.FC = () => {
                     <div className="section-title">Filling</div>
                     {FILLINGS.map(f => (
                         <label key={f} className="custom-checkbox">
-                            <input type="checkbox" checked={formData.filling.includes(f)} onChange={() => toggleArray('filling', f)} />
+                            <input type="checkbox" aria-label={isPrint ? undefined : `Filling: ${f}`} checked={formData.filling.includes(f)} onChange={() => toggleArray('filling', f)} />
                             <div className="checkmark"></div>
                             <span>{f}</span>
                         </label>
                     ))}
                     <div className="field-group">
                         <span>Other:</span>
-                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.fillingOther} onChange={e => setFormData((p: any) => ({ ...p, fillingOther: e.target.value }))} />
+                        <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Other filling'} value={formData.fillingOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, fillingOther: e.target.value }))} />
                     </div>
                 </div>
 
@@ -267,14 +267,14 @@ const OrderForm: React.FC = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                         {DECORATIVE.map(f => (
                             <label key={f} className="custom-checkbox" style={{ marginBottom: '3px' }}>
-                                <input type="checkbox" checked={formData.decorative.includes(f)} onChange={() => toggleArray('decorative', f)} />
+                                <input type="checkbox" aria-label={isPrint ? undefined : `Decorative: ${f}`} checked={formData.decorative.includes(f)} onChange={() => toggleArray('decorative', f)} />
                                 <div className="checkmark"></div>
                                 <span style={{ lineHeight: 1.1 }}>{f}</span>
                             </label>
                         ))}
                         <div className="field-group" style={{ marginTop: '8px', marginBottom: '5px' }}>
                             <span style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>Other:</span>
-                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.decorativeOther} onChange={e => setFormData((p: any) => ({ ...p, decorativeOther: e.target.value }))} />
+                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Other decorative addition'} value={formData.decorativeOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, decorativeOther: e.target.value }))} />
                         </div>
                     </div>
                 </div>
@@ -286,14 +286,14 @@ const OrderForm: React.FC = () => {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px' }}>
                         {['Bento', '10"', '6"', '12"', '8"'].map(s => (
                             <label key={s} className="custom-checkbox">
-                                <input type="checkbox" checked={formData.size === s} onChange={() => setFormData((p: any) => ({ ...p, size: p.size === s ? '' : s }))} />
+                                <input type="checkbox" aria-label={isPrint ? undefined : `Size: ${s}`} checked={formData.size === s} onChange={() => setFormData((p: OrderFormData) => ({ ...p, size: p.size === s ? '' : s }))} />
                                 <div className="checkmark"></div>
                                 <span>{s}</span>
                             </label>
                         ))}
                         <div className="field-group" style={{ gridColumn: 'span 2' }}>
                             <span>Other:</span>
-                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.sizeOther} onChange={e => setFormData((p: any) => ({ ...p, sizeOther: e.target.value }))} />
+                            <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Other size'} value={formData.sizeOther} onChange={e => setFormData((p: OrderFormData) => ({ ...p, sizeOther: e.target.value }))} />
                         </div>
                     </div>
                 </div>
@@ -308,12 +308,12 @@ const OrderForm: React.FC = () => {
 
             <div className="field-group" style={{ marginTop: '10px' }}>
                 <span>Special Instructions :</span>
-                <input className="field-line" style={{ flex: 1, minWidth: 0 }} value={formData.specialInstructions} onChange={e => setFormData((p: any) => ({ ...p, specialInstructions: e.target.value }))} />
+                <input className="field-line" style={{ flex: 1, minWidth: 0 }} aria-label={isPrint ? undefined : 'Special Instructions'} value={formData.specialInstructions} onChange={e => setFormData((p: OrderFormData) => ({ ...p, specialInstructions: e.target.value }))} />
             </div>
 
             <div style={{ marginTop: 'auto', borderTop: '2px solid #000', paddingTop: '15px', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                 <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 'bold', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    Date: <input className="field-line" style={{ width: '250px', fontSize: '16px' }} value={formData.date} onChange={e => setFormData((p: any) => ({ ...p, date: e.target.value }))} />
+                    Date: <input className="field-line" style={{ width: '250px', fontSize: '16px' }} aria-label={isPrint ? undefined : 'Date'} value={formData.date} onChange={e => setFormData((p: OrderFormData) => ({ ...p, date: e.target.value }))} />
                 </div>
             </div>
 
@@ -330,13 +330,13 @@ const OrderForm: React.FC = () => {
         {/* INTERACTIVE VIEW */}
         <div className="capture-anchor">
             <div ref={formRef}>
-                <FormContent />
+                {renderForm(false)}
             </div>
         </div>
 
         {/* HIDDEN PRINT TEMPLATE (LOCKED TO DESKTOP) */}
-        <div className="print-template" ref={printableRef}>
-            <FormContent isPrint={true} />
+        <div className="print-template" ref={printableRef} aria-hidden="true">
+            {renderForm(true)}
         </div>
 
         <div className="no-print">
@@ -352,7 +352,7 @@ const OrderForm: React.FC = () => {
                 </button>
                 
                 <button 
-                    onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: any) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
+                    onClick={() => { if(confirm('Clear all form data?')) { setFormData((p: OrderFormData) => ({ ...p, name: '', deliveryDate: '', phone: '', occasion: '', tiers: '', shape: '', shapeCustom: '', address: '', cakeFlavor: [], cakeFlavorOther: '', specialFlavor: [], specialFlavorOther: '', filling: [], fillingOther: '', decorative: [], decorativeOther: '', size: '', sizeOther: '', specialInstructions: '' })); localStorage.removeItem(STORAGE_KEY); } }}
                     className="btn-tertiary"
                     style={{ flex: '1 1 100%' }}
                 >
