@@ -128,8 +128,9 @@ body {
 }
 
 .print-template .paper-container {
-  width: 1080px !important;
-  max-width: 1080px !important;
+  /* fill the template's content box; a fixed 1080px overflowed its 50px side padding */
+  width: 100% !important;
+  max-width: none !important;
   margin: 0 !important;
   box-shadow: none !important;
   padding: 0 !important;

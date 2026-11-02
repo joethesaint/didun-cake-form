@@ -95,6 +95,10 @@ const OrderForm: React.FC = () => {
                 cacheBust: true,
                 style: {
                     opacity: '1',
+                    // the template sits at left:-9999px to stay out of view; undo that in the
+                    // copy html-to-image draws, or the picture comes out blank
+                    position: 'static',
+                    left: '0',
                 }
             });
             
